@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Admin Dashboard - CampusThread</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6f00d2;
+            --secondary-color: #fff;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #b085ff;
+            --secondary-color: #1f1f2e;
+            --text-dark: #e5e5f7;
+            --text-light: #b8b8ca;
+            --bg-light: #101120;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --success: #66bb6a;
+            --warning: #ffb74d;
+            --danger: #ef5350;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: var(--secondary-color);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            gap: 1rem;
+        }
+
+        .logo {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 900;
+        }
+
+        .logo span {
+            color: var(--text-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 1.2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.45rem 0.7rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(111, 0, 210, 0.12);
+            color: var(--primary-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .hamburger {
+            border: none;
+            background: transparent;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--secondary-color);
+            z-index: 1000;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            background: var(--secondary-color);
+            z-index: 1001;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+
+        .close-menu:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 3rem 2rem;
+            margin: 0;
+            flex: 1;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.4rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .mobile-nav-links a:hover {
+            background: rgba(111, 0, 210, 0.12);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .nav-right {
+                gap: 0.4rem;
+            }
+            #themeToggle {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.7rem;
+            }
+        }
+
+        .header-right {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+        }
+
+        .user-badge i {
+            color: var(--primary-color);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        /* ===== TABS NAVIGATION ===== */
+        .tabs-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== UPLOAD FORM ===== */
+        .form-container {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-group input[type="file"] {
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"]::file-selector-button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input[type="file"]::file-selector-button:hover {
+            background-color: #5a0099;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 0, 210, 0.1);
+        }
+
+        .form-group textarea {
+            resize: none;
+            grid-column: 1 / -1;
+            min-height: 100px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .image-preview-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--border-radius);
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            position: relative;
+            border: 2px solid #e0e0e0;
+        }
+
+        .image-preview.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 0, 210, 0.1);
+        }
+
+        .image-preview-label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a0099;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(111, 0, 210, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #da190b;
+        }
+
+        /* ===== PRODUCTS LIST ===== */
+        .products-section {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] .btn-primary {
+            background-color: #8e3cff;
+            color: #fff;
+            box-shadow: 0 6px 19px rgba(147, 76, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        [data-theme="dark"] .btn-secondary,
+        [data-theme="dark"] .btn-danger {
+            background-color: #2f2f50;
+            color: #f7f7ff;
+            box-shadow: 0 6px 19px rgba(0, 0, 0, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .product-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .product-actions button {
+            flex: 1;
+            padding: 0.7rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .edit-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #5a0099;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* ===== ALERT MESSAGES ===== */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert i {
+            font-weight: bold;
+        }
+
+        .close-alert {
+            margin-left: auto;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: inherit;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--secondary-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .header-top,
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Mobile menu overlay for all screen sizes */
+        .nav-links {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            background-color: var(--secondary-color);
+            flex-direction: column;
+            padding: 4rem 2rem 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links.active {
+            transform: translateX(0);
+        }
+
+        .nav-links a {
+            width: 100%;
+            display: block;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            background: rgba(111, 0, 210, 0.12);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-nav {
+                gap: 0.5rem;
+            }
+
+            .tab-btn {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .form-container,
+            .products-section {
+                padding: 1.5rem;
+            }
+
+            .tabs-nav {
+                gap: 0;
+            }
+
+            .tab-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image {
+                height: 150px;
+                font-size: 2.5rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header-top {
+                gap: 0.5rem;
+            }
+
+            .user-badge {
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+                padding: 0.7rem 0.9rem;
+            }
+
+            .form-grid {
+                gap: 0.75rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .product-image {
+                height: 140px;
+            }
+
+            .product-card {
+                min-height: 300px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1260px;
+            }
+
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">Campus<span>Thread</span></a>
+
+            <div class="nav-right">
+                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
+                <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-menu-header">
+                    <button class="close-menu" id="closeMenu" aria-label="Close menu">×</button>
+                </div>
+                <ul class="mobile-nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="index.html#universities">Universities</a></li>
+                    <li><a href="index.html#brands">Brands</a></li>
+                    <li><a href="vendoradmin.html">Vendor Admin</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="dashboard-title">
+            <i class="fas fa-chart-line"></i> Vendor Admin Dashboard
+        </h1>
+
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('upload')">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Product
+            </button>
+            <button class="tab-btn" onclick="switchTab('products')">
+                <i class="fas fa-list"></i> My Products
+            </button>
+        </div>
+
+        <!-- Tab 1: Upload Product -->
+        <div id="upload" class="tab-content active">
+            <div class="form-container">
+                <h2 class="form-title">
+                    <i class="fas fa-plus-circle"></i> Add New Product
+                </h2>
+                
+                <!-- Available Brands and Categories Info -->
+                <!-- <div style="background-color: #e3f2fd; padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1.5rem; border-left: 4px solid var(--primary-color);">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Available Brands & Categories</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--text-dark);">Brands</h4>
+                            <div id="availableBrands" style="color: var(--text-light); line-height: 1.8;"></div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: var(--text-dark);">Categories</h4>
+                            <div id="availableCategories" style="color: var(--text-light); line-height: 1.8;"></div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light); font-style: italic;">
+                        These are managed by the Super Admin. All products are automatically tagged as "Vendor Product" brand and "General" category.
+                    </p>
+                </div> -->
+                
+                <form id="productForm" onsubmit="handleSubmit(event)">
+                    <div class="form-grid">
+                        <!-- Product Name -->
+                        <div class="form-group">
+                            <label for="productName">Product Name *</label>
+                            <input type="text" id="productName" required placeholder="e.g., UNILAG Lions Hoodie">
+                        </div>
+
+                        <!-- Price -->
+                        <div class="form-group">
+                            <label for="productPrice">Price (₦) *</label>
+                            <input type="number" id="productPrice" required placeholder="e.g., 25000" min="0" step="100">
+                        </div>
+
+                        <!-- University/School -->
+                        <div class="form-group">
+                            <label for="university">University/School *</label>
+                            <select id="university" required>
+                                <option value="">Select University</option>
+                                <optgroup label="Federal Universities">
+                                    <option value="University of Lagos (UNILAG)">University of Lagos (UNILAG)</option>
+                                    <option value="University of Ibadan (UI)">University of Ibadan (UI)</option>
+                                    <option value="Ahmadu Bello University (ABU)">Ahmadu Bello University (ABU)</option>
+                                    <option value="University of Nigeria, Nsukka (UNN)">University of Nigeria, Nsukka (UNN)</option>
+                                    <option value="Obafemi Awolowo University (OAU)">Obafemi Awolowo University (OAU)</option>
+                                    <option value="University of Benin (UNIBEN)">University of Benin (UNIBEN)</option>
+                                    <option value="University of Ilorin (UNILORIN)">University of Ilorin (UNILORIN)</option>
+                                    <option value="University of Jos (UNIJOS)">University of Jos (UNIJOS)</option>
+                                    <option value="University of Maiduguri (UNIMAID)">University of Maiduguri (UNIMAID)</option>
+                                    <option value="University of Calabar (UNICAL)">University of Calabar (UNICAL)</option>
+                                    <option value="Ladoke Akintola University of Technology (LAUTECH)">Ladoke Akintola University of Technology (LAUTECH)</option>
+                                    <option value="University of Port Harcourt (UNIPORT)">University of Port Harcourt (UNIPORT)</option>
+                                    <option value="Abubakar Tafawa Balewa University (ATBU)">Abubakar Tafawa Balewa University (ATBU)</option>
+                                    <option value="Federal University of Agriculture, Abeokuta (FUNAAB)">Federal University of Agriculture, Abeokuta (FUNAAB)</option>
+                                    <option value="Federal University of Technology, Akure (FUTA)">Federal University of Technology, Akure (FUTA)</option>
+                                    <option value="Federal University of Technology, Minna (FUTMINNA)">Federal University of Technology, Minna (FUTMINNA)</option>
+                                    <option value="Federal University of Technology, Owerri (FUTO)">Federal University of Technology, Owerri (FUTO)</option>
+                                    <option value="Federal University of Agriculture, Makurdi (FUAM)">Federal University of Agriculture, Makurdi (FUAM)</option>
+                                    <option value="Modibbo Adama University (MAUTECH)">Modibbo Adama University (MAUTECH)</option>
+                                    <option value="Alex Ekwueme Federal University, Ndufu-Alike">Alex Ekwueme Federal University, Ndufu-Alike</option>
+                                    <option value="Nnamdi Azikiwe University (UNIZIK)">Nnamdi Azikiwe University (UNIZIK)</option>
+                                    <option value="Federal University, Lokoja">Federal University, Lokoja</option>
+                                    <option value="Federal University, Kashere">Federal University, Kashere</option>
+                                    <option value="Federal University, Wukari">Federal University, Wukari</option>
+                                    <option value="Federal University, Gusau">Federal University, Gusau</option>
+                                    <option value="Federal University, Dutsin-Ma">Federal University, Dutsin-Ma</option>
+                                    <option value="Federal University, Birnin-Kebbi">Federal University, Birnin-Kebbi</option>
+                                    <option value="Federal University, Otuoke">Federal University, Otuoke</option>
+                                    <option value="Federal University, Ndifu-Alike, Ebonyi">Federal University, Ndifu-Alike, Ebonyi</option>
+                                </optgroup>
+                                <optgroup label="State Universities">
+                                    <option value="Lagos State University (LASU)">Lagos State University (LASU)</option>
+                                    <option value="Osun State University (UNIOSUN)">Osun State University (UNIOSUN)</option>
+                                    <option value="University of Ilorin (KWASU)">Kwara State University (KWASU)</option>
+                                    <option value="Plateau State University (PLASU)">Plateau State University (PLASU)</option>
+                                    <option value="Ekiti State University (EKSU)">Ekiti State University (EKSU)</option>
+                                    <option value="Niger State University of Science and Technology">Niger State University of Science and Technology</option>
+                                    <option value="Kogi State University">Kogi State University</option>
+                                    <option value="Nasarawa State University">Nasarawa State University</option>
+                                    <option value="University of Calabar-Oron">University of Calabar-Oron</option>
+                                    <option value="Cross River University of Technology">Cross River University of Technology</option>
+                                    <option value="Rivers State University of Science and Technology">Rivers State University of Science and Technology</option>
+                                    <option value="Enugu State University of Science and Technology">Enugu State University of Science and Technology</option>
+                                    <option value="Anambra State University of Science and Technology">Anambra State University of Science and Technology</option>
+                                    <option value="Abia State University">Abia State University</option>
+                                    <option value="Ebonyi State University">Ebonyi State University</option>
+                                    <option value="Imo State University">Imo State University</option>
+                                    <option value="Akwa Ibom State University">Akwa Ibom State University</option>
+                                    <option value="Zamfara State University">Zamfara State University</option>
+                                    <option value="Kebbi State University of Science and Technology">Kebbi State University of Science and Technology</option>
+                                    <option value="Sokoto State University">Sokoto State University</option>
+                                    <option value="Niger State University">Niger State University</option>
+                                    <option value="Benue State University">Benue State University</option>
+                                    <option value="Bauchi State University">Bauchi State University</option>
+                                    <option value="Taraba State University">Taraba State University</option>
+                                    <option value="Adamawa State University">Adamawa State University</option>
+                                    <option value="Yobe State University">Yobe State University</option>
+                                    <option value="Jigawa State University">Jigawa State University</option>
+                                    <option value="Katsina State University">Katsina State University</option>
+                                    <option value="Kano State University">Kano State University</option>
+                                    <option value="Borin State University">Borin State University</option>
+                                    <option value="Oyo State University">Oyo State University</option>
+                                    <option value="Ogun State University">Ogun State University</option>
+                                    <option value="Ondo State University">Ondo State University</option>
+                                    <option value="Edo State University">Edo State University</option>
+                                    <option value="Delta State University">Delta State University</option>
+                                    <option value="Bayelsa State University">Bayelsa State University</option>
+                                </optgroup>
+                                <optgroup label="Private Universities (Selected)">
+                                    <option value="Covenant University">Covenant University</option>
+                                    <option value="Lagos Business School">Lagos Business School</option>
+                                    <option value="University of Lagos Affiliated Institutions">University of Lagos Affiliated Institutions</option>
+                                    <option value="Babcock University">Babcock University</option>
+                                    <option value="Pan-Atlantic University">Pan-Atlantic University</option>
+                                    <option value="American University of Nigeria">American University of Nigeria</option>
+                                    <option value="Afe Babalola University">Afe Babalola University</option>
+                                    <option value="Al-Hikmah University">Al-Hikmah University</option>
+                                    <option value="Bowen University">Bowen University</option>
+                                    <option value="Benson Idahosa University">Benson Idahosa University</option>
+                                    <option value="Dominican University">Dominican University</option>
+                                    <option value="Fountain University">Fountain University</option>
+                                    <option value="Joseph Ayo Babalola University">Joseph Ayo Babalola University</option>
+                                    <option value="Redeemer's University">Redeemer's University</option>
+                                </optgroup>
+                                <optgroup label="National Technical Universities">
+                                    <option value="Auchi Polytechnic">Auchi Polytechnic</option>
+                                    <option value="Edo State Polytechnic">Edo State Polytechnic</option>
+                                    <option value="Plateau State Polytechnic">Plateau State Polytechnic</option>
+                                    <option value="Kaduna Polytechnic">Kaduna Polytechnic</option>
+                                    <option value="Port Harcourt Polytechnic">Port Harcourt Polytechnic</option>
+                                    <option value="Yaba College of Technology">Yaba College of Technology</option>
+                                    <option value="Lagos City Polytechnic">Lagos City Polytechnic</option>
+                                    <option value="Federal College of Education (Technical)">Federal College of Education (Technical)</option>
+                                </optgroup>
+                                <option value="Other">Other University/College</option>
+                            </select>
+                        </div>
+
+                        <!-- Brand -->
+                        <!-- <div class="form-group">
+                            <label for="brand">Brand/Vendor Name *</label>
+                            <select id="brand" required>
+                                <option value="">Select Brand</option>
+                                <option value="Akin_Threads">Akin_Threads</option>
+                                <option value="lfe_Urban">lfe_Urban</option>
+                                <option value="Nsukka_Gear">Nsukka_Gear</option>
+                                <option value="Nsukka_Threads">Nsukka_Threads</option>
+                                <option value="Other">Add New Brand</option>
+                            </select>
+                        </div> -->
+
+                        <!-- Custom Brand (if Other selected) -->
+                        <!-- <div class="form-group" id="customBrandGroup" style="display: none;">
+                            <label for="customBrand">New Brand Name</label>
+                            <input type="text" id="customBrand" placeholder="e.g., My Fashion Brand">
+                        </div> -->
+
+                        <!-- Category -->
+                        <!-- <div class="form-group">
+                            <label for="category">Category *</label>
+                            <select id="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Hoodies & Sweatshirts">Hoodies & Sweatshirts</option>
+                                <option value="Graphic Tees">Graphic Tees</option>
+                                <option value="Polos">Polos</option>
+                                <option value="Jackets">Jackets</option>
+                                <option value="Caps & Beanies">Caps & Beanies</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div> -->
+
+                        <!-- Product Description -->
+                        <div class="form-group full-width">
+                            <label for="description">Description</label>
+                            <textarea id="description" placeholder="Describe your product, materials, features, etc."></textarea>
+                        </div>
+
+                        <!-- Brand Selection -->
+                        <div class="form-group">
+                            <label for="productBrand">Brand *</label>
+                            <select id="productBrand" required>
+                                <option value="">Select Brand</option>
+                            </select>
+                        </div>
+
+                        <!-- Vendor Social Link -->
+                        <div class="form-group">
+                            <label for="vendorSocialLink">Vendor Social Media / DM Link *</label>
+                            <input type="url" id="vendorSocialLink" required placeholder="https://wa.me/1234567890 or https://t.me/vendorname">
+                            <small style="color: var(--text-light);">Use a direct DM/contact URL for WhatsApp, Telegram, Instagram, etc.</small>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="form-group">
+                            <label for="productCategory">Category *</label>
+                            <select id="productCategory" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+
+                        <!-- Image/Video Upload -->
+                        <div class="form-group full-width">
+                            <label for="productMedia">Product Image or Video *</label>
+                            <input type="file" id="productMedia" accept="image/*,video/*" required>
+                            <small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Accepted formats: JPG, PNG, GIF, MP4, WebM (Max 10MB)</small>
+                            <div id="mediaPreview" style="margin-top: 1rem; display: none;">
+                                <div style="position: relative; width: 150px; height: 150px; border-radius: var(--border-radius); overflow: hidden; background: var(--bg-light); border: 2px solid #e0e0e0;">
+                                    <img id="previewImg" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                    <video id="previewVideo" style="width: 100%; height: 100%; display: none;" controls></video>
+                                    <button type="button" onclick="clearMediaPreview()" style="position: absolute; top: 5px; right: 5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold;">×</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check-circle"></i> Upload Product
+                            </button>
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> Clear Form
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tab 2: My Products -->
+        <div id="products" class="tab-content">
+            <div class="products-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-inbox"></i> Your Products
+                    </h2>
+                    <span id="productCount" style="color: var(--text-light); font-weight: 600;">0 products</span>
+                </div>
+
+                <!-- Filters for My Products -->
+                <div style="background: var(--secondary-color); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                    <h3 style="margin-bottom: 1rem; color: var(--text-dark); font-weight: 600;">Filter Your Products</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Brand</label>
+                            <select id="filterBrand" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: var(--border-radius); font-family: inherit;" onchange="filterMyProducts()">
+                                <option value="">All Brands</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Category</label>
+                            <select id="filterCategory" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: var(--border-radius); font-family: inherit;" onchange="filterMyProducts()">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn btn-secondary" onclick="resetProductFilters()" style="width: 100%;">
+                                <i class="fas fa-redo"></i> Reset Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="productsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <!-- <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Edit Product
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <form id="editForm" onsubmit="handleEditSubmit(event)">
+                <div class="form-group">
+                    <label for="editProductName">Product Name *</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProductPrice">Price (₦) *</label>
+                    <input type="number" id="editProductPrice" required min="0" step="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="editUniversity">University/School *</label>
+                    <select id="editUniversity" required>
+                        <option value="">Select University</option>
+                        <optgroup label="Federal Universities">
+                            <option value="University of Lagos (UNILAG)">University of Lagos (UNILAG)</option>
+                            <option value="University of Ibadan (UI)">University of Ibadan (UI)</option>
+                            <option value="Ahmadu Bello University (ABU)">Ahmadu Bello University (ABU)</option>
+                            <option value="University of Nigeria, Nsukka (UNN)">University of Nigeria, Nsukka (UNN)</option>
+                            <option value="Obafemi Awolowo University (OAU)">Obafemi Awolowo University (OAU)</option>
+                            <option value="University of Benin (UNIBEN)">University of Benin (UNIBEN)</option>
+                            <option value="University of Ilorin (UNILORIN)">University of Ilorin (UNILORIN)</option>
+                            <option value="University of Jos (UNIJOS)">University of Jos (UNIJOS)</option>
+                            <option value="University of Maiduguri (UNIMAID)">University of Maiduguri (UNIMAID)</option>
+                            <option value="University of Calabar (UNICAL)">University of Calabar (UNICAL)</option>
+                            <option value="Ladoke Akintola University of Technology (LAUTECH)">Ladoke Akintola University of Technology (LAUTECH)</option>
+                            <option value="University of Port Harcourt (UNIPORT)">University of Port Harcourt (UNIPORT)</option>
+                            <option value="Abubakar Tafawa Balewa University (ATBU)">Abubakar Tafawa Balewa University (ATBU)</option>
+                            <option value="Federal University of Agriculture, Abeokuta (FUNAAB)">Federal University of Agriculture, Abeokuta (FUNAAB)</option>
+                            <option value="Federal University of Technology, Akure (FUTA)">Federal University of Technology, Akure (FUTA)</option>
+                            <option value="Federal University of Technology, Minna (FUTMINNA)">Federal University of Technology, Minna (FUTMINNA)</option>
+                            <option value="Federal University of Technology, Owerri (FUTO)">Federal University of Technology, Owerri (FUTO)</option>
+                            <option value="Federal University of Agriculture, Makurdi (FUAM)">Federal University of Agriculture, Makurdi (FUAM)</option>
+                            <option value="Modibbo Adama University (MAUTECH)">Modibbo Adama University (MAUTECH)</option>
+                            <option value="Alex Ekwueme Federal University, Ndufu-Alike">Alex Ekwueme Federal University, Ndufu-Alike</option>
+                            <option value="Nnamdi Azikiwe University (UNIZIK)">Nnamdi Azikiwe University (UNIZIK)</option>
+                            <option value="Federal University, Lokoja">Federal University, Lokoja</option>
+                            <option value="Federal University, Kashere">Federal University, Kashere</option>
+                            <option value="Federal University, Wukari">Federal University, Wukari</option>
+                            <option value="Federal University, Gusau">Federal University, Gusau</option>
+                            <option value="Federal University, Dutsin-Ma">Federal University, Dutsin-Ma</option>
+                            <option value="Federal University, Birnin-Kebbi">Federal University, Birnin-Kebbi</option>
+                            <option value="Federal University, Otuoke">Federal University, Otuoke</option>
+                            <option value="Federal University, Ndifu-Alike, Ebonyi">Federal University, Ndifu-Alike, Ebonyi</option>
+                        </optgroup>
+                        <optgroup label="State Universities">
+                            <option value="Lagos State University (LASU)">Lagos State University (LASU)</option>
+                            <option value="Osun State University (UNIOSUN)">Osun State University (UNIOSUN)</option>
+                            <option value="University of Ilorin (KWASU)">Kwara State University (KWASU)</option>
+                            <option value="Plateau State University (PLASU)">Plateau State University (PLASU)</option>
+                            <option value="Ekiti State University (EKSU)">Ekiti State University (EKSU)</option>
+                            <option value="Niger State University of Science and Technology">Niger State University of Science and Technology</option>
+                            <option value="Kogi State University">Kogi State University</option>
+                            <option value="Nasarawa State University">Nasarawa State University</option>
+                            <option value="University of Calabar-Oron">University of Calabar-Oron</option>
+                            <option value="Cross River University of Technology">Cross River University of Technology</option>
+                            <option value="Rivers State University of Science and Technology">Rivers State University of Science and Technology</option>
+                            <option value="Enugu State University of Science and Technology">Enugu State University of Science and Technology</option>
+                            <option value="Anambra State University of Science and Technology">Anambra State University of Science and Technology</option>
+                            <option value="Abia State University">Abia State University</option>
+                            <option value="Ebonyi State University">Ebonyi State University</option>
+                            <option value="Imo State University">Imo State University</option>
+                            <option value="Akwa Ibom State University">Akwa Ibom State University</option>
+                            <option value="Zamfara State University">Zamfara State University</option>
+                            <option value="Kebbi State University of Science and Technology">Kebbi State University of Science and Technology</option>
+                            <option value="Sokoto State University">Sokoto State University</option>
+                            <option value="Niger State University">Niger State University</option>
+                            <option value="Benue State University">Benue State University</option>
+                            <option value="Bauchi State University">Bauchi State University</option>
+                            <option value="Taraba State University">Taraba State University</option>
+                            <option value="Adamawa State University">Adamawa State University</option>
+                            <option value="Yobe State University">Yobe State University</option>
+                            <option value="Jigawa State University">Jigawa State University</option>
+                            <option value="Katsina State University">Katsina State University</option>
+                            <option value="Kano State University">Kano State University</option>
+                            <option value="Borin State University">Borin State University</option>
+                            <option value="Oyo State University">Oyo State University</option>
+                            <option value="Ogun State University">Ogun State University</option>
+                            <option value="Ondo State University">Ondo State University</option>
+                            <option value="Edo State University">Edo State University</option>
+                            <option value="Delta State University">Delta State University</option>
+                            <option value="Bayelsa State University">Bayelsa State University</option>
+                        </optgroup>
+                        <optgroup label="Private Universities (Selected)">
+                            <option value="Covenant University">Covenant University</option>
+                            <option value="Lagos Business School">Lagos Business School</option>
+                            <option value="University of Lagos Affiliated Institutions">University of Lagos Affiliated Institutions</option>
+                            <option value="Babcock University">Babcock University</option>
+                            <option value="Pan-Atlantic University">Pan-Atlantic University</option>
+                            <option value="American University of Nigeria">American University of Nigeria</option>
+                            <option value="Afe Babalola University">Afe Babalola University</option>
+                            <option value="Al-Hikmah University">Al-Hikmah University</option>
+                            <option value="Bowen University">Bowen University</option>
+                            <option value="Benson Idahosa University">Benson Idahosa University</option>
+                            <option value="Dominican University">Dominican University</option>
+                            <option value="Fountain University">Fountain University</option>
+                            <option value="Joseph Ayo Babalola University">Joseph Ayo Babalola University</option>
+                            <option value="Redeemer's University">Redeemer's University</option>
+                        </optgroup>
+                        <optgroup label="National Technical Universities">
+                            <option value="Auchi Polytechnic">Auchi Polytechnic</option>
+                            <option value="Edo State Polytechnic">Edo State Polytechnic</option>
+                            <option value="Plateau State Polytechnic">Plateau State Polytechnic</option>
+                            <option value="Kaduna Polytechnic">Kaduna Polytechnic</option>
+                            <option value="Port Harcourt Polytechnic">Port Harcourt Polytechnic</option>
+                            <option value="Yaba College of Technology">Yaba College of Technology</option>
+                            <option value="Lagos City Polytechnic">Lagos City Polytechnic</option>
+                            <option value="Federal College of Education (Technical)">Federal College of Education (Technical)</option>
+                        </optgroup>
+                        <option value="Other">Other University/College</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editBrand">Brand *</label>
+                    <input type="text" id="editBrand" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCategory">Category *</label>
+                    <input type="text" id="editCategory" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription" style="resize: none; min-height: 100px;"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <script>
+        // Maximum file size: 10MB
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        let selectedMediaFile = null;
+
+        // Default data
+        const DEFAULT_BRANDS = ['Nike', 'Adidas', 'Puma', 'Gucci', 'Louis Vuitton', 'Zara', 'H&M'];
+        const DEFAULT_CATEGORIES = [
+            { id: 1, name: 'Shirt', icon: 'fas fa-shirt' },
+            { id: 2, name: 'Tie', icon: 'fas fa-tie' },
+            { id: 3, name: 'Socks', icon: 'fas fa-socks' },
+            { id: 4, name: 'Caps', icon: 'fas fa-hat-cowboy' },
+            { id: 5, name: 'Accessories', icon: 'fas fa-ring' }
+        ];
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            displayAvailableBrandsAndCategories();
+            loadProducts();
+            setupMediaUpload();
+        });
+
+        // Display available brands and categories from localStorage
+        function displayAvailableBrandsAndCategories() {
+            // Get brands from localStorage
+            let brands = JSON.parse(localStorage.getItem('campusThreadBrands') || JSON.stringify(DEFAULT_BRANDS));
+            if (brands.length === 0) {
+                brands = DEFAULT_BRANDS;
+            }
+
+            // Get categories from localStorage
+            let categories = JSON.parse(localStorage.getItem('campusThreadCategories') || JSON.stringify(DEFAULT_CATEGORIES));
+            if (categories.length === 0) {
+                categories = DEFAULT_CATEGORIES;
+            }
+
+            // Populate brand select in upload form
+            const brandSelect = document.getElementById('productBrand');
+            if (brandSelect) {
+                brandSelect.innerHTML = '<option value="">Select Brand</option>';
+                brands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand;
+                    option.textContent = brand;
+                    brandSelect.appendChild(option);
+                });
+            }
+
+            // Populate category select in upload form
+            const categorySelect = document.getElementById('productCategory');
+            if (categorySelect) {
+                categorySelect.innerHTML = '<option value="">Select Category</option>';
+                categories.forEach(cat => {
+                    const catObj = typeof cat === 'object' ? cat : { name: cat };
+                    const option = document.createElement('option');
+                    option.value = catObj.name;
+                    option.textContent = catObj.name;
+                    categorySelect.appendChild(option);
+                });
+            }
+
+            // Populate filter brand select in My Products
+            const filterBrandSelect = document.getElementById('filterBrand');
+            if (filterBrandSelect) {
+                filterBrandSelect.innerHTML = '<option value="">All Brands</option>';
+                brands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand;
+                    option.textContent = brand;
+                    filterBrandSelect.appendChild(option);
+                });
+            }
+
+            // Populate filter category select in My Products
+            const filterCategorySelect = document.getElementById('filterCategory');
+            if (filterCategorySelect) {
+                filterCategorySelect.innerHTML = '<option value="">All Categories</option>';
+                categories.forEach(cat => {
+                    const catObj = typeof cat === 'object' ? cat : { name: cat };
+                    const option = document.createElement('option');
+                    option.value = catObj.name;
+                    option.textContent = catObj.name;
+                    filterCategorySelect.appendChild(option);
+                });
+            }
+
+            // Display available brands and categories info
+            const brandsDiv = document.getElementById('availableBrands');
+            if (brandsDiv) {
+                brandsDiv.innerHTML = brands.map(brand => `<div>• ${brand}</div>`).join('');
+            }
+
+            // Display categories info
+            const categoriesDiv = document.getElementById('availableCategories');
+            if (categoriesDiv) {
+                categoriesDiv.innerHTML = categories.map(cat => {
+                    const catObj = typeof cat === 'object' ? cat : { name: cat };
+                    return `<div>• ${catObj.name}</div>`;
+                }).join('');
+            }
+        }
+
+        // Setup media upload
+        function setupMediaUpload() {
+            const mediaInput = document.getElementById('productMedia');
+            if (mediaInput) {
+                mediaInput.addEventListener('change', handleMediaSelect);
+            }
+        }
+
+        // Handle media selection
+        function handleMediaSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file size
+            if (file.size > MAX_FILE_SIZE) {
+                showAlert('File size must be less than 10MB', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'];
+            if (!validTypes.includes(file.type)) {
+                showAlert('Please upload a valid image (JPG, PNG, GIF) or video (MP4, WebM)', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            selectedMediaFile = file;
+            displayMediaPreview(file);
+        }
+
+        // Display media preview
+        function displayMediaPreview(file) {
+            const reader = new FileReader();
+            const previewContainer = document.getElementById('mediaPreview');
+            const previewImg = document.getElementById('previewImg');
+            const previewVideo = document.getElementById('previewVideo');
+
+            reader.onload = function(e) {
+                if (file.type.startsWith('image/')) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                    previewVideo.style.display = 'none';
+                } else if (file.type.startsWith('video/')) {
+                    previewVideo.src = e.target.result;
+                    previewVideo.style.display = 'block';
+                    previewImg.style.display = 'none';
+                }
+                previewContainer.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Clear media preview
+        function clearMediaPreview() {
+            selectedMediaFile = null;
+            document.getElementById('productMedia').value = '';
+            document.getElementById('mediaPreview').style.display = 'none';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            const brandSelect = document.getElementById('brand');
+            const customBrandGroup = document.getElementById('customBrandGroup');
+            
+            if (brandSelect) {
+                brandSelect.addEventListener('change', function() {
+                    customBrandGroup.style.display = this.value === 'Other' ? 'block' : 'none';
+                });
+            }
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+
+            if (tabName === 'products') {
+                loadProducts();
+            }
+        }
+
+        // Handle form submission
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            if (!selectedMediaFile) {
+                showAlert('Please select an image or video', 'error');
+                return;
+            }
+
+            const brand = document.getElementById('productBrand').value;
+            const category = document.getElementById('productCategory').value;
+            const vendorSocialLink = document.getElementById('vendorSocialLink').value.trim();
+
+            if (!brand || !category) {
+                showAlert('Please select a brand and category', 'error');
+                return;
+            }
+
+            if (!vendorSocialLink) {
+                showAlert('Please provide your vendor social media/DM link', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const formData = {
+                    id: Date.now(),
+                    name: document.getElementById('productName').value,
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    university: document.getElementById('university').value,
+                    brand: brand,
+                    category: category,
+                    vendorSocialLink: vendorSocialLink,
+                    description: document.getElementById('description').value,
+                    media: e.target.result,
+                    mediaType: selectedMediaFile.type,
+                    mediaName: selectedMediaFile.name,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Get existing products
+                let products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+                products.push(formData);
+                localStorage.setItem('campusThreadProducts', JSON.stringify(products));
+
+                // Show success message
+                showAlert('Product uploaded successfully!', 'success');
+
+                // Reset form
+                document.getElementById('productForm').reset();
+                selectedMediaFile = null;
+                document.getElementById('mediaPreview').style.display = 'none';
+            };
+
+            reader.readAsDataURL(selectedMediaFile);
+        }
+
+        // Load and display products
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            const container = document.getElementById('productsContainer');
+            const countElement = document.getElementById('productCount');
+
+            if (countElement) {
+                countElement.textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
+            }
+
+            if (products.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>No products uploaded yet. Start by uploading your first product!</p>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.mediaType && product.mediaType.startsWith('video/') 
+                            ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>` 
+                            : `<img src="${product.media}" style="width: 100%; height: 100%; object-fit: cover;" alt="${product.name}">`
+                        }
+                    </div>
+                    <div class="product-details">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-meta">
+                            <span><i class="fas fa-tag"></i> ${product.category}</span>
+                            <span><i class="fas fa-building"></i> ${product.university}</span>
+                            <span><i class="fas fa-user"></i> ${product.brand}</span>
+                        </div>
+                        <div class="product-price">₦${product.price.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter My Products
+        function filterMyProducts() {
+            const products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            const filterBrand = document.getElementById('filterBrand').value;
+            const filterCategory = document.getElementById('filterCategory').value;
+
+            let filtered = products.filter(product => {
+                return (!filterBrand || product.brand === filterBrand) &&
+                       (!filterCategory || product.category === filterCategory);
+            });
+
+            renderMyProducts(filtered);
+        }
+
+        // Reset product filters
+        function resetProductFilters() {
+            document.getElementById('filterBrand').value = '';
+            document.getElementById('filterCategory').value = '';
+            loadProducts();
+        }
+
+        // Render filtered products
+        function renderMyProducts(products) {
+            const container = document.getElementById('productsContainer');
+            const countElement = document.getElementById('productCount');
+
+            if (countElement) {
+                countElement.textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
+            }
+
+            if (products.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>No products found. Start by uploading your first product!</p>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.mediaType && product.mediaType.startsWith('video/') 
+                            ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>` 
+                            : `<img src="${product.media}" style="width: 100%; height: 100%; object-fit: cover;" alt="${product.name}">`
+                        }
+                    </div>
+                    <div class="product-details">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-meta">
+                            <span><i class="fas fa-tag"></i> ${product.category}</span>
+                            <span><i class="fas fa-building"></i> ${product.university}</span>
+                            <span><i class="fas fa-user"></i> ${product.brand}</span>
+                        </div>
+                        <div class="product-price">₦${product.price.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show alert messages
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+                <button class="close-alert" onclick="this.parentElement.remove()">×</button>
+            `;
+            alertContainer.appendChild(alertDiv);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Theme mode (light/dark)
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeButton = document.getElementById('themeToggle');
+            if (themeButton) {
+                themeButton.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+            localStorage.setItem('campusThreadTheme', theme);
+        }
+
+        function initThemeToggle() {
+            const savedTheme = localStorage.getItem('campusThreadTheme') || 'light';
+            setTheme(savedTheme);
+            const themeButton = document.getElementById('themeToggle');
+            if (themeButton) {
+                themeButton.addEventListener('click', () => {
+                    const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    setTheme(nextTheme);
+                });
+            }
+        }
+
+        initThemeToggle();
+
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        closeMenu.addEventListener('click', closeMobileMenu);
+
+        // Close menu when clicking on links
+        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu when clicking outside
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+</body>
+</html>

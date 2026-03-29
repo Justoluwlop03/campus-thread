@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard - CampusThread</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6f00d2;
+            --secondary-color: #fff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #b085ff;
+            --secondary-color: #1f1f2e;
+            --success-color: #66bb6a;
+            --danger-color: #ef5350;
+            --warning-color: #ffb74d;
+            --info-color: #29b6f6;
+            --text-dark: #e5e5f7;
+            --text-light: #b8b8ca;
+            --bg-light: #101120;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background-color: var(--secondary-color);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--text-dark);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            padding: 2rem 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: var(--bg-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            min-height: 600px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            font-size: 2.5rem;
+        }
+
+        /* ===== DASHBOARD CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .stat-card.info {
+            border-left-color: var(--info-color);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-color);
+        }
+
+        .stat-card.success .stat-value {
+            color: var(--success-color);
+        }
+
+        .stat-card.warning .stat-value {
+            color: var(--warning-color);
+        }
+
+        .stat-card.info .stat-value {
+            color: var(--info-color);
+        }
+
+        /* ===== FORMS ===== */
+        .form-container {
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 0, 210, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a00b0;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-success,
+        [data-theme="dark"] .btn-danger,
+        [data-theme="dark"] .btn {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+            filter: brightness(1.08);
+        }
+
+        [data-theme="dark"] .btn-primary {
+            background-color: #8e3cff;
+            color: #fff;
+        }
+
+        [data-theme="dark"] .btn-success {
+            background-color: #30c266;
+            color: #fff;
+        }
+
+        [data-theme="dark"] .btn-danger {
+            background-color: #e64a5c;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== TABLES ===== */
+        .table-container {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: var(--bg-light);
+            border-bottom: 2px solid #ddd;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background-color: var(--bg-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .product-image-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .product-video-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-light);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        /* ===== SEARCH BAR ===== */
+        .search-bar {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 0, 210, 0.1);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.6rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .container {
+                flex-direction: column;
+                padding: 0.8rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .stats-grid, .form-row, .tables-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .badge {
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 0.72rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .table {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1380px;
+            }
+
+            .sidebar {
+                width: 260px;
+            }
+
+            .main-content {
+                margin-left: 270px;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="shop.html" class="logo">Campus<span>Thread</span></a>
+            <div class="header-actions">
+                <span style="font-weight: 600;">Super Admin</span>
+                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
+                <button class="logout-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="menu-item active" onclick="showSection('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('products')"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('brands')"><i class="fas fa-tag"></i> Brands</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('categories')"><i class="fas fa-list"></i> Categories</a></li>
+                <li><a href="#" class="menu-item" onclick="showSection('analytics')"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- ALERT CONTAINER -->
+            <div id="alertContainer"></div>
+
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="content-section active">
+                <h1 class="section-title"><i class="fas fa-chart-line"></i> Dashboard</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Products</div>
+                        <div class="stat-value" id="totalProducts">0</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Active Brands</div>
+                        <div class="stat-value" id="totalBrands">0</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Categories</div>
+                        <div class="stat-value" id="totalCategories">0</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-label">Unique Vendors</div>
+                        <div class="stat-value" id="totalVendors">0</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Brand</th>
+                                <th>Products</th>
+                                <th>Vendors</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="brandStatsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- PRODUCTS SECTION -->
+            <section id="products" class="content-section">
+                <h1 class="section-title"><i class="fas fa-box"></i> Products Management</h1>
+                
+                <div class="search-bar">
+                    <input type="text" id="productSearch" placeholder="Search products by name, brand, or category...">
+                    <button class="btn btn-primary" onclick="resetProductSearch()">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Media</th>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- BRANDS SECTION -->
+            <section id="brands" class="content-section">
+                <h1 class="section-title"><i class="fas fa-tag"></i> Brands Management</h1>
+                
+                <div class="form-container">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Add New Brand</h3>
+                    <form id="brandForm" onsubmit="addBrand(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Brand Name *</label>
+                                <input type="text" id="brandName" required placeholder="Enter brand name">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Brand
+                        </button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Brand Name</th>
+                                <th>Products Count</th>
+                                <th>Vendors Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="brandsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CATEGORIES SECTION -->
+            <section id="categories" class="content-section">
+                <h1 class="section-title"><i class="fas fa-list"></i> Categories Management</h1>
+                
+                <div class="form-container">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Add New Category</h3>
+                    <form id="categoryForm" onsubmit="addCategory(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category Name *</label>
+                                <input type="text" id="categoryName" required placeholder="Enter category name (e.g., Shirt, Tie, Socks, Caps)">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon (Font Awesome) *</label>
+                                <input type="text" id="categoryIcon" required placeholder="e.g., fas fa-shirt">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Category
+                        </button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Icon</th>
+                                <th>Products Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics" class="content-section">
+                <h1 class="section-title"><i class="fas fa-chart-bar"></i> Analytics</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Average Product Price</div>
+                        <div class="stat-value" id="avgPrice">₦0</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Most Popular Brand</div>
+                        <div class="stat-value" id="topBrand" style="font-size: 1.5rem;">-</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Most Popular Category</div>
+                        <div class="stat-value" id="topCategory" style="font-size: 1.5rem;">-</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-label">Top University</div>
+                        <div class="stat-value" id="topUniversity" style="font-size: 1.2rem;">-</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analyticsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- EDIT PRODUCT MODAL -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Product</h2>
+                <button class="modal-close" onclick="closeModal('editProductModal')">&times;</button>
+            </div>
+            <form id="editProductForm" onsubmit="saveProductEdit(event)">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+                <div class="form-group">
+                    <label>Price (₦)</label>
+                    <input type="number" id="editProductPrice" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="editProductCategory" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Brand</label>
+                    <input type="text" id="editProductBrand" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>University</label>
+                    <input type="text" id="editProductUniversity" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="editProductDescription" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="closeModal('editProductModal')">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT BRAND MODAL -->
+    <div id="editBrandModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Brand</h2>
+                <button class="modal-close" onclick="closeModal('editBrandModal')">&times;</button>
+            </div>
+            <form id="editBrandForm" onsubmit="saveBrandEdit(event)">
+                <div class="form-group">
+                    <label>Brand Name</label>
+                    <input type="text" id="editBrandName" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="closeModal('editBrandModal')">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT CATEGORY MODAL -->
+    <div id="editCategoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Category</h2>
+                <button class="modal-close" onclick="closeModal('editCategoryModal')">&times;</button>
+            </div>
+            <form id="editCategoryForm" onsubmit="saveCategoryEdit(event)">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="editCategoryName" required>
+                </div>
+                <div class="form-group">
+                    <label>Icon</label>
+                    <input type="text" id="editCategoryIcon" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="closeModal('editCategoryModal')">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ===== INITIALIZE DATA =====
+        const DEFAULT_CATEGORIES = [
+            { id: 1, name: 'Shirt', icon: 'fas fa-shirt' },
+            { id: 2, name: 'Tie', icon: 'fas fa-tie' },
+            { id: 3, name: 'Socks', icon: 'fas fa-socks' },
+            { id: 4, name: 'Caps', icon: 'fas fa-hat-cowboy' },
+            { id: 5, name: 'Accessories', icon: 'fas fa-ring' }
+        ];
+
+        const DEFAULT_BRANDS = ['Nike', 'Adidas', 'Puma', 'Gucci', 'Louis Vuitton', 'Zara', 'H&M'];
+
+        let allProducts = [];
+        let allBrands = [];
+        let allCategories = [];
+        let editingProductId = null;
+        let editingBrandId = null;
+        let editingCategoryId = null;
+
+        // Initialize data on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            initializeCategoryOptions();
+            showSection('dashboard');
+            updateDashboard();
+        });
+
+        // Load data from localStorage
+        function loadData() {
+            allProducts = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            allBrands = JSON.parse(localStorage.getItem('campusThreadBrands') || JSON.stringify(DEFAULT_BRANDS));
+            allCategories = JSON.parse(localStorage.getItem('campusThreadCategories') || JSON.stringify(DEFAULT_CATEGORIES));
+
+            // Ensure default categories exist
+            if (allCategories.length === 0) {
+                allCategories = DEFAULT_CATEGORIES;
+                saveCategories();
+            }
+
+            // Ensure default brands exist
+            if (allBrands.length === 0) {
+                allBrands = DEFAULT_BRANDS;
+                saveBrands();
+            }
+        }
+
+        // Save data to localStorage
+        function saveProducts() {
+            localStorage.setItem('campusThreadProducts', JSON.stringify(allProducts));
+        }
+
+        function saveBrands() {
+            localStorage.setItem('campusThreadBrands', JSON.stringify(allBrands));
+        }
+
+        function saveCategories() {
+            localStorage.setItem('campusThreadCategories', JSON.stringify(allCategories));
+        }
+
+        // Initialize category options in forms
+        function initializeCategoryOptions() {
+            const categorySelects = document.querySelectorAll('select[id*="Category"]');
+            categorySelects.forEach(select => {
+                select.innerHTML = '';
+                allCategories.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.name;
+                    option.textContent = cat.name;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // ===== SECTION NAVIGATION =====
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Load section-specific data
+            if (sectionName === 'dashboard') {
+                updateDashboard();
+            } else if (sectionName === 'products') {
+                loadProductsTable();
+            } else if (sectionName === 'brands') {
+                loadBrandsTable();
+            } else if (sectionName === 'categories') {
+                loadCategoriesTable();
+            } else if (sectionName === 'analytics') {
+                loadAnalytics();
+            }
+        }
+
+        // ===== DASHBOARD =====
+        function updateDashboard() {
+            const uniqueBrands = [...new Set(allProducts.map(p => p.brand))];
+            const uniqueVendors = [...new Set(allProducts.map(p => p.brand))];
+
+            document.getElementById('totalProducts').textContent = allProducts.length;
+            document.getElementById('totalBrands').textContent = uniqueBrands.length;
+            document.getElementById('totalCategories').textContent = allCategories.length;
+            document.getElementById('totalVendors').textContent = uniqueVendors.length;
+
+            loadBrandStats();
+        }
+
+        function loadBrandStats() {
+            const brandStats = [];
+            const uniqueBrands = [...new Set(allProducts.map(p => p.brand))];
+
+            uniqueBrands.forEach(brand => {
+                const brandProducts = allProducts.filter(p => p.brand === brand);
+                const vendorCount = new Set(brandProducts.map(p => p.brand)).size;
+                
+                brandStats.push({
+                    brand: brand,
+                    productCount: brandProducts.length,
+                    vendorCount: vendorCount
+                });
+            });
+
+            const tbody = document.getElementById('brandStatsBody');
+            tbody.innerHTML = brandStats.length === 0 
+                ? '<tr><td colspan="4" style="text-align: center; padding: 2rem;">No data available</td></tr>'
+                : brandStats.map(stat => `
+                    <tr>
+                        <td><strong>${stat.brand}</strong></td>
+                        <td><span class="stat-value" style="font-size: 1.5rem;">${stat.productCount}</span></td>
+                        <td><span class="stat-value" style="font-size: 1.5rem; color: var(--success-color);">${stat.vendorCount}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewBrandDetails('${stat.brand}')">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function viewBrandDetails(brand) {
+            const products = allProducts.filter(p => p.brand === brand);
+            showAlert(`${brand} has ${products.length} products`, 'info');
+        }
+
+        // ===== PRODUCTS MANAGEMENT =====
+        function loadProductsTable() {
+            renderProductsTable(allProducts);
+        }
+
+        function renderProductsTable(products) {
+            const tbody = document.getElementById('productsTableBody');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;"><div class="empty-state"><i class="fas fa-inbox"></i><p>No products found</p></div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = products.map(product => {
+                const mediaThumb = product.mediaType && product.mediaType.startsWith('video/') 
+                    ? `<div class="product-video-thumb"><i class="fas fa-video" style="font-size: 1.5rem;"></i></div>`
+                    : `<img src="${product.media}" alt="${product.name}" class="product-image-thumb">`;
+
+                return `
+                    <tr>
+                        <td>${mediaThumb}</td>
+                        <td><strong>${product.name}</strong></td>
+                        <td>${product.brand}</td>
+                        <td><strong>₦${product.price.toLocaleString()}</strong></td>
+                        <td>${product.category}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="openEditProductModal(${product.id})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('productSearch').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = allProducts.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.brand.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            renderProductsTable(filtered);
+        });
+
+        function resetProductSearch() {
+            document.getElementById('productSearch').value = '';
+            loadProductsTable();
+        }
+
+        function openEditProductModal(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            editingProductId = productId;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductCategory').value = product.category;
+            document.getElementById('editProductBrand').value = product.brand;
+            document.getElementById('editProductUniversity').value = product.university;
+            document.getElementById('editProductDescription').value = product.description || '';
+
+            openModal('editProductModal');
+        }
+
+        function saveProductEdit(event) {
+            event.preventDefault();
+            const productIndex = allProducts.findIndex(p => p.id === editingProductId);
+            if (productIndex === -1) return;
+
+            allProducts[productIndex] = {
+                ...allProducts[productIndex],
+                name: document.getElementById('editProductName').value,
+                price: parseFloat(document.getElementById('editProductPrice').value),
+                category: document.getElementById('editProductCategory').value,
+                description: document.getElementById('editProductDescription').value,
+                updatedAt: new Date().toISOString()
+            };
+
+            saveProducts();
+            showAlert('Product updated successfully!', 'success');
+            closeModal('editProductModal');
+            loadProductsTable();
+        }
+
+        function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+
+            allProducts = allProducts.filter(p => p.id !== productId);
+            saveProducts();
+            showAlert('Product deleted successfully!', 'success');
+            loadProductsTable();
+            updateDashboard();
+        }
+
+        // ===== BRANDS MANAGEMENT =====
+        function loadBrandsTable() {
+            const tbody = document.getElementById('brandsTableBody');
+            
+            tbody.innerHTML = allBrands.map((brand, index) => {
+                const brandProducts = allProducts.filter(p => p.brand === brand);
+                const vendorCount = new Set(brandProducts.map(p => p.brand)).size;
+                
+                return `
+                    <tr>
+                        <td><strong>${brand}</strong></td>
+                        <td><span class="stat-value" style="font-size: 1.5rem;">${brandProducts.length}</span></td>
+                        <td><span class="stat-value" style="font-size: 1.5rem; color: var(--success-color);">${vendorCount}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="openEditBrandModal(${index})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteBrand(${index})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function addBrand(event) {
+            event.preventDefault();
+            const brandName = document.getElementById('brandName').value.trim();
+
+            if (!brandName) {
+                showAlert('Please enter a brand name', 'warning');
+                return;
+            }
+
+            if (allBrands.includes(brandName)) {
+                showAlert('This brand already exists!', 'warning');
+                return;
+            }
+
+            allBrands.push(brandName);
+            saveBrands();
+            showAlert('Brand added successfully!', 'success');
+            document.getElementById('brandForm').reset();
+            loadBrandsTable();
+            updateDashboard();
+        }
+
+        function openEditBrandModal(index) {
+            editingBrandId = index;
+            document.getElementById('editBrandName').value = allBrands[index];
+            openModal('editBrandModal');
+        }
+
+        function saveBrandEdit(event) {
+            event.preventDefault();
+            const newName = document.getElementById('editBrandName').value.trim();
+
+            if (!newName) {
+                showAlert('Please enter a brand name', 'warning');
+                return;
+            }
+
+            if (allBrands.includes(newName) && allBrands[editingBrandId] !== newName) {
+                showAlert('This brand already exists!', 'warning');
+                return;
+            }
+
+            const oldBrand = allBrands[editingBrandId];
+            allBrands[editingBrandId] = newName;
+
+            // Update products with old brand name
+            allProducts.forEach(product => {
+                if (product.brand === oldBrand) {
+                    product.brand = newName;
+                }
+            });
+
+            saveBrands();
+            saveProducts();
+            showAlert('Brand updated successfully!', 'success');
+            closeModal('editBrandModal');
+            loadBrandsTable();
+            updateDashboard();
+        }
+
+        function deleteBrand(index) {
+            const brand = allBrands[index];
+            const brandProducts = allProducts.filter(p => p.brand === brand);
+
+            if (brandProducts.length > 0) {
+                showAlert(`Cannot delete brand with active products. (${brandProducts.length} products found)`, 'danger');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete the brand "${brand}"?`)) return;
+
+            allBrands.splice(index, 1);
+            saveBrands();
+            showAlert('Brand deleted successfully!', 'success');
+            loadBrandsTable();
+            updateDashboard();
+        }
+
+        // ===== CATEGORIES MANAGEMENT =====
+        function loadCategoriesTable() {
+            const tbody = document.getElementById('categoriesTableBody');
+            
+            tbody.innerHTML = allCategories.map((category, index) => {
+                const categoryProducts = allProducts.filter(p => p.category === category.name);
+                
+                return `
+                    <tr>
+                        <td><strong>${category.name}</strong></td>
+                        <td><i class="${category.icon}"></i> ${category.icon}</td>
+                        <td><span class="stat-value" style="font-size: 1.5rem;">${categoryProducts.length}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="openEditCategoryModal(${index})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteCategory(${index})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function addCategory(event) {
+            event.preventDefault();
+            const categoryName = document.getElementById('categoryName').value.trim();
+            const categoryIcon = document.getElementById('categoryIcon').value.trim();
+
+            if (!categoryName || !categoryIcon) {
+                showAlert('Please fill in all fields', 'warning');
+                return;
+            }
+
+            if (allCategories.some(c => c.name.toLowerCase() === categoryName.toLowerCase())) {
+                showAlert('This category already exists!', 'warning');
+                return;
+            }
+
+            const newCategory = {
+                id: Math.max(...allCategories.map(c => c.id), 0) + 1,
+                name: categoryName,
+                icon: categoryIcon
+            };
+
+            allCategories.push(newCategory);
+            saveCategories();
+            initializeCategoryOptions();
+            showAlert('Category added successfully!', 'success');
+            document.getElementById('categoryForm').reset();
+            loadCategoriesTable();
+            updateDashboard();
+        }
+
+        function openEditCategoryModal(index) {
+            editingCategoryId = index;
+            document.getElementById('editCategoryName').value = allCategories[index].name;
+            document.getElementById('editCategoryIcon').value = allCategories[index].icon;
+            openModal('editCategoryModal');
+        }
+
+        function saveCategoryEdit(event) {
+            event.preventDefault();
+            const newName = document.getElementById('editCategoryName').value.trim();
+            const newIcon = document.getElementById('editCategoryIcon').value.trim();
+
+            if (!newName || !newIcon) {
+                showAlert('Please fill in all fields', 'warning');
+                return;
+            }
+
+            const oldName = allCategories[editingCategoryId].name;
+            allCategories[editingCategoryId].name = newName;
+            allCategories[editingCategoryId].icon = newIcon;
+
+            // Update products with old category name
+            allProducts.forEach(product => {
+                if (product.category === oldName) {
+                    product.category = newName;
+                }
+            });
+
+            saveCategories();
+            saveProducts();
+            initializeCategoryOptions();
+            showAlert('Category updated successfully!', 'success');
+            closeModal('editCategoryModal');
+            loadCategoriesTable();
+            updateDashboard();
+        }
+
+        function deleteCategory(index) {
+            const category = allCategories[index];
+            const categoryProducts = allProducts.filter(p => p.category === category.name);
+
+            if (categoryProducts.length > 0) {
+                showAlert(`Cannot delete category with active products. (${categoryProducts.length} products found)`, 'danger');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete the category "${category.name}"?`)) return;
+
+            allCategories.splice(index, 1);
+            saveCategories();
+            initializeCategoryOptions();
+            showAlert('Category deleted successfully!', 'success');
+            loadCategoriesTable();
+            updateDashboard();
+        }
+
+        // ===== ANALYTICS =====
+        function loadAnalytics() {
+            if (allProducts.length === 0) {
+                document.getElementById('analyticsTableBody').innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 2rem;">No data available</td></tr>';
+                document.getElementById('avgPrice').textContent = '₦0';
+                document.getElementById('topBrand').textContent = '-';
+                document.getElementById('topCategory').textContent = '-';
+                document.getElementById('topUniversity').textContent = '-';
+                return;
+            }
+
+            // Average price
+            const avgPrice = allProducts.reduce((sum, p) => sum + p.price, 0) / allProducts.length;
+            document.getElementById('avgPrice').textContent = '₦' + avgPrice.toLocaleString('en-NG', { maximumFractionDigits: 0 });
+
+            // Top brand
+            const brandCounts = {};
+            allProducts.forEach(p => {
+                brandCounts[p.brand] = (brandCounts[p.brand] || 0) + 1;
+            });
+            const topBrand = Object.keys(brandCounts).reduce((a, b) => brandCounts[a] > brandCounts[b] ? a : b);
+            document.getElementById('topBrand').textContent = topBrand;
+
+            // Top category
+            const categoryCounts = {};
+            allProducts.forEach(p => {
+                categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+            });
+            const topCategory = Object.keys(categoryCounts).reduce((a, b) => categoryCounts[a] > categoryCounts[b] ? a : b);
+            document.getElementById('topCategory').textContent = topCategory;
+
+            // Top university
+            const universityCounts = {};
+            allProducts.forEach(p => {
+                universityCounts[p.university] = (universityCounts[p.university] || 0) + 1;
+            });
+            const topUniversity = Object.keys(universityCounts).reduce((a, b) => universityCounts[a] > universityCounts[b] ? a : b);
+            document.getElementById('topUniversity').textContent = topUniversity;
+
+            // Analytics table
+            const analyticsData = [
+                { category: 'Total Products', value: allProducts.length },
+                { category: 'Unique Brands', value: Object.keys(brandCounts).length },
+                { category: 'Unique Categories', value: Object.keys(categoryCounts).length },
+                { category: 'Unique Universities', value: Object.keys(universityCounts).length },
+                { category: 'Highest Product Price', value: '₦' + Math.max(...allProducts.map(p => p.price)).toLocaleString() },
+                { category: 'Lowest Product Price', value: '₦' + Math.min(...allProducts.map(p => p.price)).toLocaleString() }
+            ];
+
+            document.getElementById('analyticsTableBody').innerHTML = analyticsData.map(data => `
+                <tr>
+                    <td><strong>${data.category}</strong></td>
+                    <td>${data.value}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== MODALS =====
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // ===== ALERTS =====
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+                <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            alertContainer.appendChild(alertDiv);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Refresh dashboard when storage changes
+        window.addEventListener('storage', function() {
+            loadData();
+            if (document.getElementById('dashboard').classList.contains('active')) {
+                updateDashboard();
+            } else if (document.getElementById('products').classList.contains('active')) {
+                loadProductsTable();
+            } else if (document.getElementById('brands').classList.contains('active')) {
+                loadBrandsTable();
+            } else if (document.getElementById('categories').classList.contains('active')) {
+                loadCategoriesTable();
+            } else if (document.getElementById('analytics').classList.contains('active')) {
+                loadAnalytics();
+            }
+        });
+
+        // Theme mode (light/dark)
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeButton = document.getElementById('themeToggle');
+            if (themeButton) {
+                themeButton.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+            localStorage.setItem('campusThreadTheme', theme);
+        }
+
+        function initThemeToggle() {
+            const savedTheme = localStorage.getItem('campusThreadTheme') || 'light';
+            setTheme(savedTheme);
+            const themeButton = document.getElementById('themeToggle');
+            if (themeButton) {
+                themeButton.addEventListener('click', () => {
+                    const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    setTheme(nextTheme);
+                });
+            }
+        }
+
+        initThemeToggle();
+    </script>
+</body>
+</html>
