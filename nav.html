@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Navbar - CampusThread</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load saved theme synchronously to prevent flash -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
         :root {
             --primary-color: #6f00d2;
@@ -235,7 +242,7 @@
             <a href="index.html" class="logo">Campus<span>Thread</span></a>
 
             <div class="nav-right">
-                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
+                <button id="themeToggle" class="btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode">🌙</button>
                 <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
                     <span></span>
                     <span></span>
@@ -290,24 +297,20 @@
             }
         });
 
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const icon = theme === 'dark' ? '☀️' : '🌙';
-            themeToggle.textContent = icon;
-            localStorage.setItem('campusThreadTheme', theme);
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         }
 
-        function initTheme() {
-            const saved = localStorage.getItem('campusThreadTheme') || 'light';
-            setTheme(saved);
-            themeToggle.addEventListener('click', () => {
-                setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-            });
-        }
-
-        initTheme();
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
     </script>
 </body>
 </html>

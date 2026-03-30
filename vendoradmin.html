@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Admin Dashboard - CampusThread</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load saved theme synchronously to prevent flash -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -987,7 +994,7 @@
             <a href="index.html" class="logo">Campus<span>Thread</span></a>
 
             <div class="nav-right">
-                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
+                <button id="themeToggle" class="btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode">🌙</button>
                 <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
                     <span></span>
                     <span></span>
@@ -1003,8 +1010,8 @@
                 <ul class="mobile-nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
-                    <li><a href="index.html#universities">Universities</a></li>
-                    <li><a href="index.html#brands">Brands</a></li>
+                    <!-- <li><a href="index.html#universities">Universities</a></li>
+                    <li><a href="index.html#brands">Brands</a></li> -->
                     <li><a href="vendoradmin.html">Vendor Admin</a></li>
                 </ul>
             </div>
@@ -1814,29 +1821,20 @@
             setTimeout(() => alertDiv.remove(), 5000);
         }
 
-        // Theme mode (light/dark)
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const themeButton = document.getElementById('themeToggle');
-            if (themeButton) {
-                themeButton.textContent = theme === 'dark' ? '☀️' : '🌙';
-            }
-            localStorage.setItem('campusThreadTheme', theme);
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         }
 
-        function initThemeToggle() {
-            const savedTheme = localStorage.getItem('campusThreadTheme') || 'light';
-            setTheme(savedTheme);
-            const themeButton = document.getElementById('themeToggle');
-            if (themeButton) {
-                themeButton.addEventListener('click', () => {
-                    const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                    setTheme(nextTheme);
-                });
-            }
-        }
-
-        initThemeToggle();
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
 
         // Hamburger menu functionality
         const hamburger = document.getElementById('hamburger');
