@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up - CampusThread</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6f00d2;
+            --secondary-color: #fff;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #b085ff;
+            --secondary-color: #1f1f2e;
+            --text-dark: #e5e5f7;
+            --text-light: #b8b8ca;
+            --bg-light: #101120;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: var(--secondary-color);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .logo {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--text-dark);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-light);
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(111, 0, 210, 0.1);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-button:hover {
+            color: var(--primary-color);
+        }
+
+        /* ===== FORM SECTIONS ===== */
+        .form-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(111, 0, 210, 0.1);
+        }
+
+        input[type="text"]:disabled,
+        input[type="email"]:disabled,
+        input[type="password"]:disabled,
+        input[type="tel"]:disabled,
+        select:disabled {
+            background: var(--bg-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ===== PASSWORD VISIBILITY ===== */
+        .password-group {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 2.5rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        /* ===== ROLE SELECTOR ===== */
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-card {
+            position: relative;
+            padding: 1.5rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            background: var(--secondary-color);
+        }
+
+        .role-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .role-card input[type="radio"]:checked + .role-icon {
+            color: var(--primary-color);
+        }
+
+        .role-card input[type="radio"]:checked ~ .role-label {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .role-card input[type="radio"]:checked ~ .role-description {
+            color: var(--primary-color);
+        }
+
+        .role-card:has(input:checked) {
+            border-color: var(--primary-color);
+            background: rgba(111, 0, 210, 0.05);
+        }
+
+        .role-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(111, 0, 210, 0.15);
+        }
+
+        .role-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .role-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .role-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-color);
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(111, 0, 210, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(111, 0, 210, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        /* ===== SOCIAL AUTH ===== */
+        .social-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            padding: 0.75rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(111, 0, 210, 0.05);
+        }
+
+        .social-btn i {
+            font-size: 1.1rem;
+        }
+
+        /* ===== LINKS ===== */
+        .auth-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .auth-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== CHECKBOX ===== */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0.75rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">Campus<span>Thread</span></a>
+            <div class="nav-right">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('signin')">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <button class="tab-button" onclick="switchTab('signup')">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </button>
+        </div>
+
+        <!-- ALERTS -->
+        <div id="alertContainer"></div>
+
+        <!-- SIGN IN FORM -->
+        <div id="signin" class="form-section active">
+            <form id="signinForm" onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <label for="signinEmail">Email Address</label>
+                    <input type="email" id="signinEmail" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group password-group">
+                    <label for="signinPassword">Password</label>
+                    <input type="password" id="signinPassword" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signinPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+
+                <div class="social-buttons">
+                    <button type="button" class="social-btn" onclick="socialAuth('google')">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn" onclick="socialAuth('facebook')">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                </div>
+
+                <div class="auth-link">
+                    Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Sign up here</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- SIGN UP FORM -->
+        <div id="signup" class="form-section">
+            <!-- ROLE SELECTION -->
+            <div id="roleSelection">
+                <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">What's your role?</h3>
+                
+                <div class="role-selector">
+                    <label class="role-card">
+                        <input type="radio" name="userRole" value="buyer" checked>
+                        <div class="role-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <span class="role-label">Buyer</span>
+                        <span class="role-description">Shop for campus apparel</span>
+                    </label>
+
+                    <label class="role-card">
+                        <input type="radio" name="userRole" value="vendor">
+                        <div class="role-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <span class="role-label">Vendor</span>
+                        <span class="role-description">Sell your products</span>
+                    </label>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="proceedToSignUp()">
+                    Continue <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- SIGN UP FORM (HIDDEN BY DEFAULT) -->
+            <form id="signupForm" onsubmit="handleSignUp(event)" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" style="flex: 0 0 auto; width: auto; padding: 0.5rem 0.75rem;" onclick="backToRoleSelection()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <span style="font-weight: 600; color: var(--primary-color);" id="selectedRoleDisplay">Buyer</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="+234 (0) 123 456 7890">
+                </div>
+
+                <div class="form-group">
+                    <label for="signupUniversity">University/Institution</label>
+                    <input type="text" id="signupUniversity" placeholder="Your university name" required>
+                </div>
+
+                <!-- VENDOR SPECIFIC FIELDS -->
+                <div id="vendorFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="signupBrandName">Brand/Shop Name</label>
+                        <input type="text" id="signupBrandName" placeholder="Your brand name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupSocialLink">Social Media / DM Link</label>
+                        <input type="text" id="signupSocialLink" placeholder="https://instagram.com/yourbrand or https://wa.me/2341234567890">
+                    </div>
+                </div>
+
+                <div class="form-group password-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signupPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="form-group password-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signupConfirmPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTOS" required>
+                    <label for="agreeTOS">I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+
+                <div class="auth-link">
+                    Already have an account? <a href="#" onclick="switchTab('signin'); return false;">Sign in here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 CampusThread. All rights reserved. | <a href="#" style="color: var(--primary-color); text-decoration: none;">Privacy Policy</a> | <a href="#" style="color: var(--primary-color); text-decoration: none;">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.tab-button').classList.add('active');
+
+            // Clear alerts
+            clearAlerts();
+        }
+
+        // ===== PASSWORD VISIBILITY =====
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            event.target.closest('.password-toggle').innerHTML = isPassword 
+                ? '<i class="fas fa-eye-slash"></i>' 
+                : '<i class="fas fa-eye"></i>';
+        }
+
+        // ===== ROLE SELECTION =====
+        let selectedRole = 'buyer';
+
+        function proceedToSignUp() {
+            selectedRole = document.querySelector('input[name="userRole"]:checked').value;
+            document.getElementById('roleSelection').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('selectedRoleDisplay').textContent = selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1);
+
+            // Show/hide vendor fields
+            const vendorFields = document.getElementById('vendorFields');
+            if (selectedRole === 'vendor') {
+                vendorFields.style.display = 'block';
+                document.getElementById('signupBrandName').required = true;
+                document.getElementById('signupSocialLink').required = true;
+            } else {
+                vendorFields.style.display = 'none';
+                document.getElementById('signupBrandName').required = false;
+                document.getElementById('signupSocialLink').required = false;
+            }
+        }
+
+        function backToRoleSelection() {
+            document.getElementById('roleSelection').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            clearAlerts();
+        }
+
+        // ===== SIGN IN =====
+        function handleSignIn(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signinEmail').value.trim();
+            const password = document.getElementById('signinPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Validate
+            if (!email || !password) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('campusThreadUsers') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showAlert('Invalid email or password', 'error');
+                return;
+            }
+
+            // Store logged in user
+            localStorage.setItem('currentUser', JSON.stringify({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                university: user.university
+            }));
+
+            if (rememberMe) {
+                localStorage.setItem('rememberEmail', email);
+            }
+
+            showAlert('Sign in successful! Redirecting...', 'success');
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (user.role === 'vendor') {
+                    window.location.href = 'vendoradmin.html';
+                } else {
+                    window.location.href = 'shop.html';
+                }
+            }, 1500);
+        }
+
+        // ===== SIGN UP =====
+        function handleSignUp(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const university = document.getElementById('signupUniversity').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const agreeTOS = document.getElementById('agreeTOS').checked;
+
+            // Validate
+            if (!name || !email || !university || !password || !confirmPassword) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (!agreeTOS) {
+                showAlert('You must agree to the Terms of Service', 'error');
+                return;
+            }
+
+            if (selectedRole === 'vendor') {
+                const brandName = document.getElementById('signupBrandName').value.trim();
+                const socialLink = document.getElementById('signupSocialLink').value.trim();
+
+                if (!brandName || !socialLink) {
+                    showAlert('Please fill in all vendor required fields', 'error');
+                    return;
+                }
+            }
+
+            // Check if email already exists
+            const users = JSON.parse(localStorage.getItem('campusThreadUsers') || '[]');
+            if (users.some(u => u.email === email)) {
+                showAlert('Email already registered', 'error');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                university: university,
+                password: password,
+                role: selectedRole,
+                createdAt: new Date().toISOString()
+            };
+
+            if (selectedRole === 'vendor') {
+                newUser.brandName = document.getElementById('signupBrandName').value.trim();
+                newUser.socialLink = document.getElementById('signupSocialLink').value.trim();
+            }
+
+            // Save user
+            users.push(newUser);
+            localStorage.setItem('campusThreadUsers', JSON.stringify(users));
+
+            // Store logged in user
+            localStorage.setItem('currentUser', JSON.stringify({
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role,
+                university: newUser.university
+            }));
+
+            showAlert('Account created successfully! Redirecting...', 'success');
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (selectedRole === 'vendor') {
+                    window.location.href = 'vendoradmin.html';
+                } else {
+                    window.location.href = 'shop.html';
+                }
+            }, 1500);
+        }
+
+        // ===== SOCIAL AUTH =====
+        function socialAuth(provider) {
+            showAlert(`${provider.charAt(0).toUpperCase() + provider.slice(1)} authentication coming soon!`, 'warning');
+        }
+
+        // ===== ALERTS =====
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(alert);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function clearAlerts() {
+            document.getElementById('alertContainer').innerHTML = '';
+        }
+
+        // ===== PREFILL EMAIL IF REMEMBERED =====
+        window.addEventListener('DOMContentLoaded', function() {
+            const rememberedEmail = localStorage.getItem('rememberEmail');
+            if (rememberedEmail) {
+                document.getElementById('signinEmail').value = rememberedEmail;
+                document.getElementById('rememberMe').checked = true;
+            }
+        });
+    </script>
+</body>
+
+</html>

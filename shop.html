@@ -46,7 +46,7 @@
             top: 0;
             width: 100%;
             background: var(--secondary-color);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             z-index: 1000;
         }
 
@@ -151,7 +151,7 @@
             display: flex;
             justify-content: flex-end;
             padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             background: var(--secondary-color);
@@ -175,7 +175,7 @@
         }
 
         .close-menu:hover {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .mobile-nav-links {
@@ -212,25 +212,26 @@
             .hamburger {
                 display: flex;
             }
-            
+
             .nav-links {
                 display: none;
             }
-            
+
             .nav-right {
                 gap: 0.4rem;
             }
-            
+
             #themeToggle {
                 font-size: 0.9rem;
                 padding: 0.4rem 0.7rem;
             }
         }
-        
+
         @media (max-width: 1024px) {
             .nav-right {
                 gap: 0.4rem;
             }
+
             #themeToggle {
                 font-size: 0.9rem;
                 padding: 0.4rem 0.7rem;
@@ -555,7 +556,8 @@
         }
 
         .product-image {
-            flex: 2; /* Image takes 2/3 of the card */
+            flex: 2;
+            /* Image takes 2/3 of the card */
             background: var(--bg-light);
             display: flex;
             align-items: center;
@@ -566,7 +568,8 @@
         }
 
         .product-info {
-            flex: 1; /* Info takes 1/3 of the card */
+            flex: 1;
+            /* Info takes 1/3 of the card */
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
@@ -664,17 +667,22 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .modal-content {
             background-color: var(--secondary-color);
-            margin: 5% auto;
+            margin: 2% auto;
             padding: 0;
             border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 800px;
+            width: 85%;
+            max-width: 1000px;
             position: relative;
             animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .close-modal {
@@ -695,11 +703,12 @@
         .modal-body {
             display: flex;
             flex-direction: row;
+            min-height: 500px;
         }
 
         .modal-image {
-            flex: 1;
-            max-height: 400px;
+            flex: 0 0 45%;
+            max-height: 600px;
             overflow: hidden;
             border-radius: var(--border-radius) 0 0 var(--border-radius);
         }
@@ -711,12 +720,15 @@
         }
 
         .modal-info {
-            padding: 2rem;
+            padding: 2.5rem;
             flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-info h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
             color: var(--text-dark);
         }
@@ -775,17 +787,67 @@
 
         .modal-actions {
             text-align: center;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== MODAL ACTIONS ===== */
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-action {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background-color: #5a0099;
+            transform: translateY(-2px);
+        }
+
+        .btn-action.secondary {
+            background-color: #e0e0e0;
+            color: var(--text-dark);
+        }
+
+        .btn-action.secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-action.danger {
+            background-color: #e64a5c;
+        }
+
+        .btn-action.danger:hover {
+            background-color: #d63849;
         }
 
         .contact-vendor-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 0.8rem 2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: var(--border-radius);
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
@@ -795,35 +857,98 @@
 
         .contact-vendor-btn:hover {
             background-color: #5a0099;
+            transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .btn-action.secondary {
+            background-color: #3a3a4a;
+            color: #e5e5f7;
+        }
+
+        [data-theme="dark"] .btn-action.secondary:hover {
+            background-color: #4a4a5a;
+        }
+
+        @media (max-width: 768px) {
+            .modal-actions {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .btn-action,
+            .contact-vendor-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
             .modal-content {
                 width: 95%;
-                margin: 10% auto;
+                margin: 5% auto;
+                max-height: 95vh;
             }
 
             .modal-body {
                 flex-direction: column;
+                min-height: auto;
             }
 
             .modal-image {
-                max-height: 250px;
+                flex: 0 0 auto;
+                max-height: 300px;
                 border-radius: var(--border-radius) var(--border-radius) 0 0;
             }
 
             .modal-info {
                 padding: 1.5rem;
+            }
+
+            .modal-meta {
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+
+            .modal-details {
+                padding: 0.9rem;
+            }
+
+            .contact-vendor-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-action,
+            .contact-vendor-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+                gap: 0.8rem;
             }
         }
 
@@ -889,7 +1014,10 @@
             color: #d8b2ff;
         }
 
-        [data-theme="dark"] .btn, [data-theme="dark"] .btn-primary, [data-theme="dark"] .btn-secondary, [data-theme="dark"] .btn-danger {
+        [data-theme="dark"] .btn,
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-secondary,
+        [data-theme="dark"] .btn-danger {
             box-shadow: 0 6px 21px rgba(41, 44, 77, 0.55);
             filter: brightness(1.1);
         }
@@ -923,12 +1051,12 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
+
             .filter-group label {
                 margin-bottom: 0.6rem;
                 font-size: 0.95rem;
             }
-            
+
             .filter-group select {
                 padding: 0.8rem 0.6rem;
                 font-size: 0.95rem;
@@ -961,11 +1089,11 @@
             .container {
                 padding: 0 0.8rem;
             }
-            
+
             .navbar {
                 padding: 0.5rem 0.8rem;
             }
-            
+
             .logo {
                 font-size: 1.3rem;
             }
@@ -995,18 +1123,18 @@
                 grid-template-columns: 1fr;
                 gap: 0.8rem;
             }
-            
+
             .filter-group label {
                 font-size: 0.85rem;
                 margin-bottom: 0.5rem;
             }
-            
+
             .filter-group select {
                 padding: 0.75rem 0.6rem;
                 font-size: 0.9rem;
                 min-height: 42px;
             }
-            
+
             .filter-btn {
                 padding: 0.85rem 1rem;
                 font-size: 0.9rem;
@@ -1086,9 +1214,11 @@
                 <ul class="mobile-nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
-                    <li><a href="index.html#universities">Universities</a></li>
-                    <li><a href="index.html#brands">Brands</a></li>
+                    <!-- <li><a href="index.html#universities">Universities</a></li>
+                    <li><a href="index.html#brands">Brands</a></li> -->
                     <li><a href="vendoradmin.html">Vendor Admin</a></li>
+                    <li><a href="cart.html">View cart</a></li>
+                    <li><a href="favorite.html">Favorite</a></li>
                 </ul>
             </div>
         </nav>
@@ -1222,6 +1352,7 @@
     <script>
         let allProducts = [];
         let filteredProducts = [];
+        let currentProductId = null;
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function () {
@@ -1426,7 +1557,7 @@
             ];
 
             const universityFilter = document.getElementById('universityFilter');
-            
+
             if (universityFilter) {
                 universityFilter.innerHTML = '<option value="">All Universities</option>';
                 nigerianUniversities.forEach(university => {
@@ -1441,6 +1572,7 @@
         // Load products from localStorage
         function loadProducts() {
             allProducts = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            
             // Sort by creation date (newest first)
             allProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             filteredProducts = [...allProducts];
@@ -1455,7 +1587,7 @@
             }
 
             const brandFilter = document.getElementById('brandFilter');
-            
+
             // Clear existing options except the first one
             const firstOption = brandFilter.querySelector('option[value=""]');
             brandFilter.innerHTML = '';
@@ -1607,10 +1739,10 @@
 
         // Create product card HTML
         function createProductCard(product) {
-            const mediaHTML = product.mediaType && product.mediaType.startsWith('video/') 
-                ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>` 
+            const mediaHTML = product.mediaType && product.mediaType.startsWith('video/')
+                ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>`
                 : `<img src="${product.media}" style="width: 100%; height: 100%; object-fit: cover;" alt="${product.name}">`;
-            
+
             return `
                 <div class="product-card">
                     <div class="product-image">${mediaHTML}</div>
@@ -1634,15 +1766,16 @@
 
         // Show product modal
         function showProductModal(productId) {
+            currentProductId = productId;
             const product = allProducts.find(p => p.id === productId);
             if (product) {
                 const modalImageDiv = document.getElementById('modalProductImage');
-                const mediaHTML = product.mediaType && product.mediaType.startsWith('video/') 
-                    ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>` 
+                const mediaHTML = product.mediaType && product.mediaType.startsWith('video/')
+                    ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${product.media}"></video>`
                     : `<img src="${product.media}" style="width: 100%; height: 100%; object-fit: cover;" alt="${product.name}">`;
-                
+
                 modalImageDiv.innerHTML = mediaHTML;
-                
+
                 document.getElementById('modalProductName').textContent = product.name;
                 document.getElementById('modalProductCategory').textContent = product.category;
                 document.getElementById('modalProductUniversity').textContent = product.university;
@@ -1652,6 +1785,10 @@
                 document.getElementById('modalProductFileName').textContent = product.mediaName || 'N/A';
                 document.getElementById('modalProductMediaType').textContent = product.mediaType || 'N/A';
                 document.getElementById('modalProductDescription').textContent = product.description || 'No description available.';
+
+                // Update button states
+                updateAddToCartButtonState();
+                updateAddToFavoriteButtonState();
 
                 const contactBtn = document.getElementById('modalContactVendorBtn');
                 const socialLink = product.vendorSocialLink && product.vendorSocialLink.trim() !== '' ? product.vendorSocialLink : '#';
@@ -1672,20 +1809,208 @@
         }
 
         // Close modal when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('productModal');
             if (event.target === modal) {
                 closeProductModal();
             }
         }
 
-        // Add to cart (placeholder function)
-        function addToCart(productId) {
-            const product = allProducts.find(p => p.id === productId);
-            if (product) {
-                alert(`Added "${product.name}" to cart!`);
-                // TODO: Implement actual cart functionality
+        // Add to cart function
+        function addToCart() {
+            console.log('addToCart called with currentProductId:', currentProductId);
+            if (!currentProductId) {
+                console.error('No currentProductId set');
+                return;
             }
+
+            const product = allProducts.find(p => p.id === currentProductId);
+            console.log('Found product:', product);
+            if (!product) {
+                console.error('Product not found with id:', currentProductId);
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem('campusThreadCart') || '[]');
+            console.log('Current cart:', cart);
+
+            // Check if product already exists in cart
+            const existingItem = cart.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                console.log('Updated existing item quantity');
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    category: product.category,
+                    university: product.university,
+                    brand: product.brand,
+                    media: product.media,
+                    mediaType: product.mediaType,
+                    quantity: 1,
+                    addedAt: new Date().toISOString()
+                });
+                console.log('Added new item to cart');
+            }
+
+            localStorage.setItem('campusThreadCart', JSON.stringify(cart));
+            console.log('Cart saved to localStorage:', cart);
+            showNotification(`"${product.name}" added to cart!`, 'success', 'View Cart', 'cart.html');
+            updateAddToCartButtonState();
+        }
+
+        // Add to favorite function
+        function addToFavorite() {
+            console.log('addToFavorite called with currentProductId:', currentProductId);
+            if (!currentProductId) {
+                console.error('No currentProductId set');
+                return;
+            }
+
+            const product = allProducts.find(p => p.id === currentProductId);
+            console.log('Found product:', product);
+            if (!product) {
+                console.error('Product not found with id:', currentProductId);
+                return;
+            }
+
+            let favorites = JSON.parse(localStorage.getItem('campusThreadFavorites') || '[]');
+            console.log('Current favorites:', favorites);
+
+            // Check if product already exists in favorites
+            const exists = favorites.find(item => item.id === product.id);
+            if (exists) {
+                favorites = favorites.filter(item => item.id !== product.id);
+                console.log('Removed item from favorites');
+                showNotification(`"${product.name}" removed from favorites!`, 'info');
+            } else {
+                favorites.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    category: product.category,
+                    university: product.university,
+                    brand: product.brand,
+                    media: product.media,
+                    mediaType: product.mediaType,
+                    addedAt: new Date().toISOString()
+                });
+                console.log('Added item to favorites');
+                showNotification(`"${product.name}" added to favorites!`, 'success', 'View Favorites', 'favorite.html');
+            }
+
+            localStorage.setItem('campusThreadFavorites', JSON.stringify(favorites));
+            console.log('Favorites saved to localStorage:', favorites);
+            updateAddToFavoriteButtonState();
+        }
+
+        // Update add to cart button state
+        function updateAddToCartButtonState() {
+            const btn = document.getElementById('modalAddToCartBtn');
+            if (!btn) return;
+
+            const cart = JSON.parse(localStorage.getItem('campusThreadCart') || '[]');
+            const isInCart = cart.some(item => item.id === currentProductId);
+
+            if (isInCart) {
+                btn.innerHTML = '<i class="fas fa-check"></i> In Cart';
+                btn.style.opacity = '0.7';
+                btn.disabled = true;
+            } else {
+                btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to Cart';
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }
+        }
+
+        // Update add to favorite button state
+        function updateAddToFavoriteButtonState() {
+            const btn = document.getElementById('modalAddToFavoriteBtn');
+            if (!btn) return;
+
+            const favorites = JSON.parse(localStorage.getItem('campusThreadFavorites') || '[]');
+            const isInFavorites = favorites.some(item => item.id === currentProductId);
+
+            if (isInFavorites) {
+                btn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+                btn.classList.remove('secondary');
+                btn.classList.add('danger');
+            } else {
+                btn.innerHTML = '<i class="fas fa-heart"></i> Add to Favorite';
+                btn.classList.remove('danger');
+                btn.classList.add('secondary');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success', actionText = null, actionLink = null) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 2000;
+                animation: slideInRight 0.3s ease;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 15px;
+                min-width: 300px;
+                max-width: 500px;
+            `;
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = message;
+            notification.appendChild(textSpan);
+
+            if (actionText && actionLink) {
+                const actionBtn = document.createElement('a');
+                actionBtn.href = actionLink;
+                actionBtn.textContent = actionText;
+                actionBtn.style.cssText = `
+                    color: white;
+                    text-decoration: underline;
+                    cursor: pointer;
+                    font-weight: 600;
+                    white-space: nowrap;
+                `;
+                actionBtn.onmouseover = () => actionBtn.style.opacity = '0.9';
+                actionBtn.onmouseout = () => actionBtn.style.opacity = '1';
+                notification.appendChild(actionBtn);
+            }
+
+            document.body.appendChild(notification);
+
+            // Add animation keyframes if not already present
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(400px); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(400px); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Remove after 4 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
         }
 
         // Reload products when storage changes (for real-time updates)
@@ -1774,7 +2099,14 @@
                     </div>
                     <p class="modal-description" id="modalProductDescription">No description available.</p>
                     <div class="modal-actions">
-                        <a id="modalContactVendorBtn" class="contact-vendor-btn" target="_blank" rel="noopener noreferrer" href="#">
+                        <button class="btn-action" onclick="addToCart()" id="modalAddToCartBtn">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button class="btn-action secondary" onclick="addToFavorite()" id="modalAddToFavoriteBtn">
+                            <i class="fas fa-heart"></i> Add to Favorite
+                        </button>
+                        <a id="modalContactVendorBtn" class="contact-vendor-btn" target="_blank"
+                            rel="noopener noreferrer" href="#">
                             <i class="fas fa-comments"></i> Contact Vendor
                         </a>
                     </div>

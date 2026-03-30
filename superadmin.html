@@ -997,6 +997,28 @@
         </div>
     </div>
 
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Delete</h2>
+                <button class="modal-close" onclick="closeModal('deleteConfirmModal')">&times;</button>
+            </div>
+            <div style="padding: 1.5rem; text-align: center;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff6b6b; margin-bottom: 1rem;"></i>
+                <p id="deleteConfirmMessage" style="font-size: 1rem; margin-bottom: 1.5rem; color: var(--text-dark);">Are you sure you want to delete this item? This action cannot be undone.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" style="flex: 1;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelDelete()" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ===== INITIALIZE DATA =====
         const DEFAULT_CATEGORIES = [
@@ -1015,6 +1037,14 @@
         let editingProductId = null;
         let editingBrandId = null;
         let editingCategoryId = null;
+
+        // Delete confirmation tracking
+        let deleteContext = {
+            type: null,      // 'product', 'brand', or 'category'
+            id: null,
+            name: null,
+            index: null
+        };
 
         // Initialize data on page load
         window.addEventListener('DOMContentLoaded', function() {
@@ -1045,7 +1075,10 @@
 
         // Save data to localStorage
         function saveProducts() {
+            console.log('saveProducts called');
+            console.log('Saving products to localStorage:', allProducts);
             localStorage.setItem('campusThreadProducts', JSON.stringify(allProducts));
+            console.log('Products saved successfully');
         }
 
         function saveBrands() {
@@ -1150,6 +1183,8 @@
 
         // ===== PRODUCTS MANAGEMENT =====
         function loadProductsTable() {
+            console.log('loadProductsTable called');
+            console.log('allProducts:', allProducts);
             renderProductsTable(allProducts);
         }
 
@@ -1162,6 +1197,8 @@
             }
 
             tbody.innerHTML = products.map(product => {
+                console.log('Rendering product:', product, 'ID:', product.id, 'ID type:', typeof product.id);
+                
                 const mediaThumb = product.mediaType && product.mediaType.startsWith('video/') 
                     ? `<div class="product-video-thumb"><i class="fas fa-video" style="font-size: 1.5rem;"></i></div>`
                     : `<img src="${product.media}" alt="${product.name}" class="product-image-thumb">`;
@@ -1239,13 +1276,18 @@
         }
 
         function deleteProduct(productId) {
-            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                showAlert('Error: Product not found!', 'danger');
+                return;
+            }
 
-            allProducts = allProducts.filter(p => p.id !== productId);
-            saveProducts();
-            showAlert('Product deleted successfully!', 'success');
-            loadProductsTable();
-            updateDashboard();
+            deleteContext.type = 'product';
+            deleteContext.id = productId;
+            deleteContext.name = product.name;
+            
+            document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete "${product.name}"? This action cannot be undone.`;
+            openModal('deleteConfirmModal');
         }
 
         // ===== BRANDS MANAGEMENT =====
@@ -1345,13 +1387,12 @@
                 return;
             }
 
-            if (!confirm(`Are you sure you want to delete the brand "${brand}"?`)) return;
-
-            allBrands.splice(index, 1);
-            saveBrands();
-            showAlert('Brand deleted successfully!', 'success');
-            loadBrandsTable();
-            updateDashboard();
+            deleteContext.type = 'brand';
+            deleteContext.index = index;
+            deleteContext.name = brand;
+            
+            document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete the brand "${brand}"?`;
+            openModal('deleteConfirmModal');
         }
 
         // ===== CATEGORIES MANAGEMENT =====
@@ -1457,14 +1498,12 @@
                 return;
             }
 
-            if (!confirm(`Are you sure you want to delete the category "${category.name}"?`)) return;
-
-            allCategories.splice(index, 1);
-            saveCategories();
-            initializeCategoryOptions();
-            showAlert('Category deleted successfully!', 'success');
-            loadCategoriesTable();
-            updateDashboard();
+            deleteContext.type = 'category';
+            deleteContext.index = index;
+            deleteContext.name = category.name;
+            
+            document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete the category "${category.name}"?`;
+            openModal('deleteConfirmModal');
         }
 
         // ===== ANALYTICS =====
@@ -1531,6 +1570,40 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
+        }
+
+        function confirmDelete() {
+            closeModal('deleteConfirmModal');
+
+            if (deleteContext.type === 'product') {
+                const productId = deleteContext.id;
+                allProducts = allProducts.filter(p => p.id !== productId);
+                saveProducts();
+                showAlert('Product deleted successfully!', 'success');
+                loadProductsTable();
+                updateDashboard();
+            } else if (deleteContext.type === 'brand') {
+                allBrands.splice(deleteContext.index, 1);
+                saveBrands();
+                showAlert('Brand deleted successfully!', 'success');
+                loadBrandsTable();
+                updateDashboard();
+            } else if (deleteContext.type === 'category') {
+                allCategories.splice(deleteContext.index, 1);
+                saveCategories();
+                initializeCategoryOptions();
+                showAlert('Category deleted successfully!', 'success');
+                loadCategoriesTable();
+                updateDashboard();
+            }
+
+            // Reset context
+            deleteContext = { type: null, id: null, name: null, index: null };
+        }
+
+        function cancelDelete() {
+            closeModal('deleteConfirmModal');
+            deleteContext = { type: null, id: null, name: null, index: null };
         }
 
         // Close modal when clicking outside

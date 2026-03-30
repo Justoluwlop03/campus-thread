@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusThread - Discover Campus Fashion Brands</title>
+    <title>CampusThread - Campus Apparel Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -30,8 +29,10 @@
             --text-dark: #e5e5f7;
             --text-light: #b8b8ca;
             --bg-light: #101120;
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -41,14 +42,15 @@
             line-height: 1.6;
         }
 
-        /* ===== HEADER & NAVIGATION ===== */
+        /* ===== HEADER ===== */
         .header {
             position: sticky;
             top: 0;
             width: 100%;
             background: var(--secondary-color);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .navbar {
@@ -57,210 +59,122 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 1rem;
+            padding: 1rem;
             gap: 1rem;
         }
 
         .logo {
             color: var(--primary-color);
             text-decoration: none;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 900;
+            text-transform: uppercase;
         }
 
         .logo span {
             color: var(--text-dark);
         }
 
-        .nav-links {
+        .nav-center {
             display: flex;
             align-items: center;
-            list-style: none;
-            gap: 1.2rem;
+            gap: 2rem;
         }
 
-        .nav-links a {
+        .nav-center a {
             color: var(--text-dark);
             text-decoration: none;
-            font-weight: 600;
-            padding: 0.45rem 0.7rem;
-            border-radius: 8px;
+            font-weight: 500;
             transition: var(--transition);
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            background: rgba(111, 0, 210, 0.12);
+        .nav-center a:hover {
             color: var(--primary-color);
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 1rem;
         }
 
-        .hamburger {
+        .theme-toggle {
+            background: var(--bg-light);
             border: none;
-            background: transparent;
-            flex-direction: column;
-            gap: 5px;
+            color: var(--text-dark);
             cursor: pointer;
+            font-size: 1.2rem;
             padding: 0.5rem;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background: var(--text-dark);
-            border-radius: 2px;
+            border-radius: 8px;
             transition: var(--transition);
         }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(4px, 4px);
+        .theme-toggle:hover {
+            background: rgba(111, 0, 210, 0.1);
         }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(4px, -4px);
-        }
-
-        /* Mobile Menu Overlay */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: var(--secondary-color);
-            z-index: 1000;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .mobile-menu.active {
-            display: flex;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            justify-content: flex-end;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            background: var(--secondary-color);
-            z-index: 1001;
-        }
-
-        .close-menu {
-            background: none;
+        .btn {
+            padding: 0.75rem 1.5rem;
             border: none;
-            font-size: 2.5rem;
-            color: var(--text-dark);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-        }
-
-        .close-menu:hover {
-            background: rgba(0,0,0,0.1);
-        }
-
-        .mobile-nav-links {
-            list-style: none;
-            padding: 3rem 2rem;
-            margin: 0;
-            flex: 1;
-        }
-
-        .mobile-nav-links li {
-            margin-bottom: 1.5rem;
-        }
-
-        .mobile-nav-links a {
-            display: block;
-            color: var(--text-dark);
-            text-decoration: none;
+            border-radius: var(--border-radius);
             font-weight: 600;
-            font-size: 1.4rem;
-            padding: 1.2rem 1.5rem;
-            border-radius: 12px;
+            cursor: pointer;
             transition: var(--transition);
-            border: 2px solid transparent;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .mobile-nav-links a:hover {
-            background: rgba(111, 0, 210, 0.12);
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(111, 0, 210, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
             color: var(--primary-color);
-            border-color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(111, 0, 210, 0.05);
             transform: translateY(-2px);
         }
 
-        @media (max-width: 1024px) {
-            .nav-right {
-                gap: 0.4rem;
-            }
-            #themeToggle {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.7rem;
-            }
-        }
-
-        .page-demo {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            font-size: 0.95rem;
-        }
-
-        .page-demo h2 {
-            margin-bottom: 0.7rem;
-        }
-
-        .page-demo p {
-            margin-bottom: 0.6rem;
-        }
         /* ===== HERO SECTION ===== */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #8b2dd6 100%);
-            color: var(--secondary-color);
-            padding: 3rem 2rem;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 3rem;
-        }
-
-        .hero-container {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 4rem 2rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 3rem;
             align-items: center;
+            min-height: calc(100vh - 80px);
         }
 
         .hero-content h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
             line-height: 1.2;
-            font-weight: 900;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .hero-content h1 .accent {
+            color: var(--primary-color);
         }
 
         .hero-content p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            color: var(--text-light);
             margin-bottom: 2rem;
-            opacity: 0.95;
             line-height: 1.8;
         }
 
@@ -270,350 +184,145 @@
             flex-wrap: wrap;
         }
 
-        .btn {
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--secondary-color);
-            border: 2px solid var(--secondary-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        .hero-image {
+        .hero-visual {
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
-        .hero-image img {
+        .hero-visual-box {
             width: 100%;
-            max-width: 500px;
-            height: auto;
-            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(111, 0, 210, 0.1) 0%, rgba(111, 0, 210, 0.05) 100%);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            color: rgba(111, 0, 210, 0.3);
         }
 
-        /* ===== MAIN CONTENT ===== */
-        .container {
+        /* ===== FEATURES SECTION ===== */
+        .features {
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 4rem auto;
             padding: 0 2rem;
         }
 
         .section-title {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 2rem;
-            color: var(--text-dark);
-        }
-
-        /* ===== FEATURED BRANDS SECTION ===== */
-        .featured-brands {
-            margin-bottom: 4rem;
-        }
-
-        .brands-carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding-bottom: 1rem;
-        }
-
-        .brands-carousel::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .brands-carousel::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .brands-carousel::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
-
-        .carousel-nav {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .carousel-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #ddd;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .carousel-dot.active {
-            background-color: var(--primary-color);
-        }
-
-        .brand-card {
-            flex: 0 0 280px;
-            background: var(--secondary-color);
-            padding: 2rem;
-            border-radius: var(--border-radius);
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: var(--transition);
-        }
-
-        .brand-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .brand-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--bg-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
             font-size: 2.5rem;
-        }
-
-        .brand-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 3rem;
             color: var(--text-dark);
         }
 
-        .brand-card p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .section-title .accent {
+            color: var(--primary-color);
         }
 
-        /* ===== UNIVERSITIES SECTION ===== */
-        .universities {
-            margin-bottom: 4rem;
-        }
-
-        .universities-carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding-bottom: 1rem;
-        }
-
-        .universities-carousel::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .universities-carousel::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .universities-carousel::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
-
-        .university-card {
-            flex: 0 0 280px;
-            background: var(--secondary-color);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: var(--transition);
-        }
-
-        .university-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .university-icon {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--bg-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 3rem;
-            border: 3px solid var(--primary-color);
-        }
-
-        .university-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-            font-weight: 700;
-        }
-
-        .university-card p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* ===== TRENDING PRODUCTS SECTION ===== */
-        .trending-products {
-            margin-bottom: 4rem;
-        }
-
-        .products-grid {
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
-        .product-card {
+        .feature-card {
+            padding: 2rem;
             background: var(--secondary-color);
             border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid rgba(0, 0, 0, 0.05);
             transition: var(--transition);
+            text-align: center;
         }
 
-        .product-card:hover {
+        .feature-card:hover {
+            border-color: var(--primary-color);
             transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 24px rgba(111, 0, 210, 0.15);
         }
 
-        .product-image {
-            width: 100%;
-            height: 280px;
-            background: var(--bg-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: #ddd;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-image::before {
-            content: attr(data-emoji);
-            position: absolute;
-        }
-
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-category {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: var(--text-dark);
-        }
-
-        .product-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-        }
-
-        .stars {
-            color: #fdd835;
-        }
-
-        .rating-count {
-            color: var(--text-light);
-        }
-
-        .product-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
             margin-bottom: 1rem;
         }
 
-        .brand-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.7rem;
-        }
-
-        .product-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .product-price {
+        .feature-card h3 {
             font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, rgba(111, 0, 210, 0.8) 100%);
+            border-radius: var(--border-radius);
+            text-align: center;
+            color: white;
+        }
+
+        .cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta .btn {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .cta .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ===== STATS SECTION ===== */
+        .stats {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
             font-weight: 900;
             color: var(--primary-color);
+            margin-bottom: 0.5rem;
         }
 
-        .view-details-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .view-details-btn:hover {
-            color: #5a0099;
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
         }
 
         /* ===== FOOTER ===== */
-        .footer {
-            background-color: var(--text-dark);
-            color: var(--secondary-color);
+        footer {
+            background: var(--secondary-color);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
             padding: 3rem 2rem;
             margin-top: 4rem;
         }
@@ -627,814 +336,247 @@
             margin-bottom: 2rem;
         }
 
-        .footer-section h4 {
+        .footer-section h3 {
             margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.8rem;
+            color: var(--text-dark);
         }
 
         .footer-section a {
-            color: #ccc;
+            display: block;
+            color: var(--text-light);
             text-decoration: none;
+            margin-bottom: 0.5rem;
             transition: var(--transition);
         }
 
         .footer-section a:hover {
             color: var(--primary-color);
+            padding-left: 0.25rem;
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
-            border-top: 1px solid #444;
-            color: #999;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
 
-        [data-theme="dark"] .footer {
-            background-color: #0f1229;
-            color: #e5e5f7;
-        }
-
-        [data-theme="dark"] .footer-section a {
-            color: #d3d3f1;
-        }
-
-        [data-theme="dark"] .footer-section a:hover {
-            color: #d8b2ff;
-        }
-
-        [data-theme="dark"] .btn, [data-theme="dark"] .btn-primary, [data-theme="dark"] .btn-secondary, [data-theme="dark"] .btn-danger {
-            box-shadow: 0 6px 21px rgba(41, 44, 77, 0.55);
-            filter: brightness(1.1);
-        }
-
-        [data-theme="dark"] .btn-primary {
-            background-color: #8e3cff;
-            color: #fff;
-        }
-
-        [data-theme="dark"] .btn-secondary {
-            background-color: #2f2f51;
-            color: #f5f5ff;
-        }
-
-        [data-theme="dark"] .btn-danger {
-            background-color: #e64a5c;
-            color: white;
-        }
-
-        /* ===== RESPONSIVE DESIGN ===== */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-                font-size: 0.9rem;
-            }
-
-            .nav-right {
-                gap: 1rem;
-            }
-
-            .hero-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
-                justify-content: flex-start;
-            }
-
-            .btn {
-                padding: 0.8rem 2rem;
-                font-size: 0.9rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .brand-card {
-                flex: 0 0 200px;
-            }
-
-            .university-card {
-                flex: 0 0 200px;
-            }
-
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 1.5rem;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 0.8rem;
-            }
-
-            .navbar {
-                flex-direction: column;
-                gap: 0.6rem;
-                align-items: flex-start;
-            }
-
-            .logo {
-                font-size: 1.3rem;
-            }
-
-            .nav-links {
-                gap: 0.8rem;
-                font-size: 0.75rem;
-                flex-wrap: wrap;
-                width: 100%;
-                justify-content: center;
-            }
-
             .hero {
-                padding: 1.5rem 0.9rem;
-                border-radius: 0 0 15px 15px;
-                margin-bottom: 1.8rem;
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+                min-height: auto;
             }
 
             .hero-content h1 {
-                font-size: 1.7rem;
-            }
-
-            .hero-content p {
-                font-size: 0.9rem;
-                margin-bottom: 0.9rem;
-            }
-
-            .btn {
-                width: 100%;
-                padding: 0.8rem 1rem;
-            }
-
-            .brand-card, .university-card {
-                flex: 0 0 190px;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1rem;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr !important;
-            }
-
-            .footer {
-                padding: 1.8rem 1rem;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .hero-container {
-                grid-template-columns: minmax(300px, 1fr) 1.1fr;
-            }
-
-            .brand-card, .university-card {
-                flex: 0 0 230px;
-            }
-
-            .product-card {
-                min-height: 340px;
-            }
-
-            .footer-content {
-                grid-template-columns: repeat(4, minmax(220px, 1fr));
-            }
-        }
-
-        @media (max-width: 360px) {
-            .hero-buttons {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .btn {
-                width: 100%;
-                padding: 0.8rem 1.5rem;
-                font-size: 0.85rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .section-title {
-                font-size: 1.3rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .brand-card {
-                flex: 0 0 160px;
-                padding: 1.5rem 1rem;
-            }
-
-            .university-card {
-                flex: 0 0 160px;
-                padding: 1.5rem;
-            }
-
-            .university-icon {
-                width: 80px;
-                height: 80px;
                 font-size: 2rem;
             }
 
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
+            .nav-center {
+                display: none;
             }
 
-            .product-image {
-                height: 200px;
-                font-size: 3rem;
+            .navbar {
+                padding: 0.75rem;
             }
 
-            .product-info {
-                padding: 1rem;
+            .logo {
+                font-size: 1.2rem;
             }
 
-            .footer-content {
-                grid-template-columns: 1fr;
+            .hero-buttons {
+                gap: 0.75rem;
             }
-        }
 
-        /* ===== AOS ANIMATIONS ===== */
-        [data-aos] {
-            opacity: 0;
-        }
+            .btn {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.9rem;
+            }
 
-        [data-aos].aos-animate {
-            opacity: 1;
+            .section-title {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Header & Navigation -->
-    <!-- <header class="header">
-        <nav class="navbar">
-            <a href="#" class="logo">Campus<span>Thread</span></a>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#home">Shops</a></li>
-                <li><a href="#universities">Universities</a></li>
-                <li><a href="#brands">Brands</a></li>
-                <li><a href="vendoradmin.html">Vendor Admin</a></li>
-            </ul>
-            <div class="nav-right">
-                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
-            </div>
-            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
-    </header> -->
-
-
-     <header class="header">
+    <!-- HEADER -->
+    <header class="header">
         <nav class="navbar">
             <a href="index.html" class="logo">Campus<span>Thread</span></a>
-
-            <div class="nav-right">
-                <button id="themeToggle" class="btn" aria-label="Toggle dark/light mode">🌙</button>
-                <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+            <div class="nav-center">
+                <a href="#features">Features</a>
+                <a href="#stats">About</a>
+                <a href="">Shop</a>
+                <a href="#contact">Contact</a>
             </div>
-
-            <!-- Mobile Menu Overlay -->
-            <div class="mobile-menu" id="mobileMenu">
-                <div class="mobile-menu-header">
-                    <button class="close-menu" id="closeMenu" aria-label="Close menu">×</button>
-                </div>
-                <ul class="mobile-nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="shop.html">Shops</a></li>
-                    <li><a href="index.html#universities">Universities</a></li>
-                    <li><a href="index.html#brands">Brands</a></li>
-                    <li><a href="vendoradmin.html">Vendor Admin</a></li>
-                </ul>
+            <div class="nav-right">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="auth.html" class="btn btn-primary">Sign In</a>
             </div>
         </nav>
     </header>
 
-
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
-                <h1>Discover Campus Fashion Brands</h1>
-                <p>Discover campus fashion brand, university fashion marketplace and the shirt you own vibe.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" data-aos="fade-up" data-aos-delay="200">Browse Universities</button>
-                    <button class="btn btn-secondary" data-aos="fade-up" data-aos-delay="400">Start Shopping</button>
-                </div>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <span class="accent">CampusThread</span></h1>
+            <p>The ultimate marketplace for campus apparel. Find unique, university-themed clothing and accessories from talented vendors, or sell your own creations to the campus community.</p>
+            <div class="hero-buttons">
+                <a href="auth.html" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+                <a href="auth.html" class="btn btn-secondary">
+                    <i class="fas fa-store"></i> Become a Vendor
+                </a>
             </div>
-            <div class="hero-image" data-aos="fade-left" data-aos-duration="1000">
-                <div style="font-size: 120px;">👥</div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-visual-box">
+                <i class="fas fa-shopping-bags"></i>
             </div>
         </div>
     </section>
 
-    <!-- Featured Brands Section -->
-    <section class="featured-brands container" data-aos="fade-up" data-aos-duration="1000">
-        <h2 class="section-title">Featured Brands</h2>
-        <div class="brands-carousel" id="brandsCarousel">
-            <div class="brand-card" data-aos="zoom-in" data-aos-delay="0">
-                 <div class="brand-icon"></div>
-                <h3>Akin_Threads</h3>
-                <p>Akin_Threads grand marbling collection.</p>
-            </div>
-            <div class="brand-card" data-aos="zoom-in" data-aos-delay="100">
-                <div class="brand-icon"></div>
-                <h3>lfe_Urban</h3>
-                <p>Brand-quality fashion and reason.</p>
-            </div>
-            <div class="brand-card" data-aos="zoom-in" data-aos-delay="200">
-                <div class="brand-icon"></div>
-                <h3>Nsukka_Gear</h3>
-                <p>Brawk-quality fashion collections.</p>
-            </div>
-            <div class="brand-card" data-aos="zoom-in" data-aos-delay="300">
-                <div class="brand-icon"></div>
-                <h3>Nsukka_Threads</h3>
-                <p>Nsukka customization and colorita.</p>
-            </div>
-        </div>
-        <div class="carousel-nav">
-            <span class="carousel-dot active" onclick="goToSlide(0)"></span>
-            <span class="carousel-dot" onclick="goToSlide(1)"></span>
-            <span class="carousel-dot" onclick="goToSlide(2)"></span>
-            <span class="carousel-dot" onclick="goToSlide(3)"></span>
-        </div>
-    </section>
-
-    <!-- Universities Section -->
-    <section class="universities container" id="universities">
-        <h2 class="section-title" data-aos="fade-up">Shop by University</h2>
-        <div class="universities-carousel" id="universitiesCarousel">
-            <div class="university-card" data-aos="flip-left" data-aos-delay="0">
-                <div class="university-icon">🏛️</div>
-                <h3>UNILAG</h3>
-                <p>UNILAG campus fashion University this collection</p>
-            </div>
-            <div class="university-card" data-aos="flip-left" data-aos-delay="100">
-                <div class="university-icon">🎓</div>
-                <h3>OAU</h3>
-                <p>OAU to uncovered fashion University this collection</p>
-            </div>
-            <div class="university-card" data-aos="flip-left" data-aos-delay="200">
-                <div class="university-icon">📚</div>
-                <h3>UNN</h3>
-                <p>UNN to uncovered fashion University this collection</p>
-            </div>
-            <div class="university-card" data-aos="flip-left" data-aos-delay="300">
-                <div class="university-icon">🌟</div>
-                <h3>UI</h3>
-                <p>UI to uncovered fashion University this collection</p>
+    <!-- FEATURES SECTION -->
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose <span class="accent">CampusThread</span>?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h3>Curated Selection</h3>
+                <p>Browse exclusive university apparel and accessories from trusted vendors across the country.</p>
             </div>
 
-            <div class="university-card" data-aos="flip-left" data-aos-delay="300">
-                <div class="university-icon">🌟</div>
-                <h3>Lautech</h3>
-                <p>UI to uncovered fashion University this collection</p>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h3>Verified Vendors</h3>
+                <p>Shop from verified campus community members. Every vendor is authenticated and reviewed by customers.</p>
             </div>
-        </div>
-        <div class="carousel-nav" id="universitiesNav">
-            <span class="carousel-dot active" onclick="goToUniversitySlide(0)"></span>
-            <span class="carousel-dot" onclick="goToUniversitySlide(1)"></span>
-            <span class="carousel-dot" onclick="goToUniversitySlide(2)"></span>
-            <span class="carousel-dot" onclick="goToUniversitySlide(3)"></span>
-            <span class="carousel-dot" onclick="goToUniversitySlide(4)"></span>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Quick Delivery</h3>
+                <p>Fast campus delivery options available. Most orders delivered within 24-48 hours on campus.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>Secure Payments</h3>
+                <p>Multiple payment methods available. Your transactions are secure and protected.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Wishlist & Favorites</h3>
+                <p>Save your favorite items and get notified when they're back in stock.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Track Everything</h3>
+                <p>Monitor your orders, sales, and manage your store all in one place.</p>
+            </div>
         </div>
     </section>
 
-    <!-- Trending Products Section -->
-    <!-- <section class="trending-products container"> -->
-        <!-- <h2 class="section-title" data-aos="fade-up">Trending Products</h2>
-        <div class="products-grid">
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="0">
-                <div class="product-image">🟣</div>
-                <div class="product-info">
-                    <div class="product-category">Hoodies & Sweatshirts</div>
-                    <div class="product-name">UNILAG "Lions" Varsity Hoodie</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.5</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">A</div>
-                        <span>Akin_Threads</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦25,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
-            </div>
+    <!-- CTA SECTION -->
+    <section class="cta">
+        <h2>Ready to Join Our Community?</h2>
+        <p>Whether you're looking to shop or sell, CampusThread is the perfect platform for campus apparel.</p>
+        <a href="auth.html" class="btn">Get Started Now</a>
+    </section>
 
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="100">
-                <div class="product-image">🟣</div>
-                <div class="product-info">
-                    <div class="product-category">Hoodies & Sweatshirts</div>
-                    <div class="product-name">UNILAG "Lions" Varsity Hoodie</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.5</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">A</div>
-                        <span>Akin_Threads</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦25,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
+    <!-- STATS SECTION -->
+    <section class="stats" id="stats">
+        <h2 class="section-title">By The <span class="accent">Numbers</span></h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Universities</div>
             </div>
-
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="200">
-                <div class="product-image">⬛</div>
-                <div class="product-info">
-                    <div class="product-category">Graphic Tees</div>
-                    <div class="product-name">UI "Genesis" Graphic Tee</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.9</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">I</div>
-                        <span>lfe_Urban</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦12,500</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Active Vendors</div>
             </div>
-
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="300">
-                <div class="product-image">⬛</div>
-                <div class="product-info">
-                    <div class="product-category">Graphic Tees</div>
-                    <div class="product-name">UI "Genesis" Graphic Tee</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.7</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">N</div>
-                        <span>Nsukka_Gear</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦12,500</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Happy Customers</div>
             </div>
-
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="100">
-                <div class="product-image">🟣</div>
-                <div class="product-info">
-                    <div class="product-category">Hoodies & Sweatshirts</div>
-                    <div class="product-name">UNILAG "Lions" Graphic Tee</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.5</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">I</div>
-                        <span>lfe_Urban</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦25,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-number">5K+</div>
+                <div class="stat-label">Products</div>
             </div>
+        </div>
+    </section>
 
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="200">
-                <div class="product-image">⬛</div>
-                <div class="product-info">
-                    <div class="product-category">Graphic Tees</div>
-                    <div class="product-name">OAU "Maroon" Graphic Tee</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.8</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">N</div>
-                        <span>Nsukka_Gear</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦12,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="300">
-                <div class="product-image">⬛</div>
-                <div class="product-info">
-                    <div class="product-category">Hoodies</div>
-                    <div class="product-name">UNN "Lions" Sweatback</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.6</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">N</div>
-                        <span>Nsukka_Gear</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦18,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card" data-aos="zoom-in" data-aos-delay="100">
-                <div class="product-image">⬛</div>
-                <div class="product-info">
-                    <div class="product-category">Graphic Tees</div>
-                    <div class="product-name">UNILAG "Lions" Varsity</div>
-                    <div class="product-rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="rating-count">4.5</span>
-                    </div>
-                    <div class="product-brand">
-                        <div class="brand-avatar">A</div>
-                        <span>Akin_Threads</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">₦15,000</span>
-                        <button class="view-details-btn">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    <!-- </section> -->
-
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- FOOTER -->
+    <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h4>CampusThread</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Careers</a></li>
-                </ul>
+                <h3>About CampusThread</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-light); font-size: 0.9rem;">Connecting campus communities through unique apparel and authentic products.</p>
             </div>
             <div class="footer-section">
-                <h4>Category</h4>
-                <ul>
-                    <li><a href="#">Hoodies</a></li>
-                    <li><a href="#">Tees</a></li>
-                    <li><a href="#">Accessories</a></li>
-                </ul>
+                <h3>Quick Links</h3>
+                <a href="#">Shop</a>
+                <a href="#">Sell with Us</a>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
             </div>
             <div class="footer-section">
-                <h4>Links</h4>
-                <ul>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Orders</a></li>
-                    <li><a href="#">Payments</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+                <h3>Policies</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Return Policy</a>
+                <a href="#">Shipping Info</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">Facebook</a>
+                <a href="#">Email</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Made by Students. For Students.</p>
+            <p>&copy; 2024 CampusThread. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- AOS Script -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
-
-        // Carousel functionality
-        let currentSlide = 0;
-        const carousel = document.getElementById('brandsCarousel');
-        const dots = document.querySelectorAll('.carousel-dot');
-
-        function goToSlide(n) {
-            currentSlide = n;
-            const offset = -currentSlide * 296; // 280px card + 16px gap
-            carousel.style.scrollLeft = currentSlide * 296;
-            
-            dots.forEach(dot => dot.classList.remove('active'));
-            dots[currentSlide].classList.add('active');
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         }
 
-        // Auto-scroll carousel
-        let autoScroll = setInterval(() => {
-            currentSlide = (currentSlide + 1) % 4;
-            goToSlide(currentSlide);
-        }, 5000);
-
-        // Pause auto-scroll on hover
-        carousel.addEventListener('mouseenter', () => {
-            clearInterval(autoScroll);
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
         });
-
-        carousel.addEventListener('mouseleave', () => {
-            autoScroll = setInterval(() => {
-                currentSlide = (currentSlide + 1) % 4;
-                goToSlide(currentSlide);
-            }, 5000);
-        });
-
-        // Universities Carousel
-        let currentUniversitySlide = 0;
-        const universitiesCarousel = document.getElementById('universitiesCarousel');
-        const universityDots = document.querySelectorAll('#universitiesNav .carousel-dot');
-
-        function goToUniversitySlide(n) {
-            currentUniversitySlide = n;
-            universitiesCarousel.style.scrollLeft = currentUniversitySlide * 296; // 280px card + 16px gap
-            
-            universityDots.forEach(dot => dot.classList.remove('active'));
-            universityDots[currentUniversitySlide].classList.add('active');
-        }
-
-        // Auto-scroll universities carousel
-        let universitiesAutoScroll = setInterval(() => {
-            currentUniversitySlide = (currentUniversitySlide + 1) % universityDots.length;
-            goToUniversitySlide(currentUniversitySlide);
-        }, 5000);
-
-        // Pause auto-scroll on hover
-        universitiesCarousel.addEventListener('mouseenter', () => {
-            clearInterval(universitiesAutoScroll);
-        });
-
-        universitiesCarousel.addEventListener('mouseleave', () => {
-            universitiesAutoScroll = setInterval(() => {
-                currentUniversitySlide = (currentUniversitySlide + 1) % universityDots.length;
-                goToUniversitySlide(currentUniversitySlide);
-            }, 5000);
-        });
-
-        // Cart functionality
-
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Responsive carousel for mobile
-        if (window.innerWidth <= 768) {
-            const brandCards = document.querySelectorAll('.brand-card');
-            brandCards.forEach(card => {
-                card.style.flex = '0 0 200px';
-            });
-        }
-
-        // // Theme mode (light/dark)
-        // function setTheme(theme) {
-        //     document.documentElement.setAttribute('data-theme', theme);
-        //     const themeButton = document.getElementById('themeToggle');
-        //     if (themeButton) {
-        //         themeButton.textContent = theme === 'dark' ? '☀️' : '🌙';
-        //     }
-        //     localStorage.setItem('campusThreadTheme', theme);
-        // }
-
-        // function initThemeToggle() {
-        //     const savedTheme = localStorage.getItem('campusThreadTheme') || 'light';
-        //     setTheme(savedTheme);
-        //     const themeButton = document.getElementById('themeToggle');
-        //     if (themeButton) {
-        //         themeButton.addEventListener('click', () => {
-        //             const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        //             setTheme(nextTheme);
-        //         });
-        //     }
-        // }
-
-        // initThemeToggle();
-
-        // // Hamburger menu functionality
-        // const hamburger = document.getElementById('hamburger');
-        // const navLinks = document.querySelector('.nav-links');
-
-        // if (hamburger) {
-        //     hamburger.addEventListener('click', () => {
-        //         hamburger.classList.toggle('active');
-        //         navLinks.classList.toggle('active');
-        //     });
-
-        //     // Close menu when a link is clicked
-        //     document.querySelectorAll('.nav-links a').forEach(link => {
-        //         link.addEventListener('click', () => {
-        //             hamburger.classList.remove('active');
-        //             navLinks.classList.remove('active');
-        //         });
-        //     });
-        // }
-
-
-const hamburger = document.getElementById('hamburger');
-        const closeMenu = document.getElementById('closeMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        function toggleMenu() {
-            hamburger.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-        }
-
-        function closeMobileMenu() {
-            hamburger.classList.remove('active');
-            mobileMenu.classList.remove('active');
-        }
-
-        hamburger.addEventListener('click', toggleMenu);
-        closeMenu.addEventListener('click', closeMobileMenu);
-
-        // Close menu when clicking on links
-        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-
-        // Close menu when clicking outside
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target === mobileMenu) {
-                closeMobileMenu();
-            }
-        });
-
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const icon = theme === 'dark' ? '☀️' : '🌙';
-            themeToggle.textContent = icon;
-            localStorage.setItem('campusThreadTheme', theme);
-        }
-
-        function initTheme() {
-            const saved = localStorage.getItem('campusThreadTheme') || 'light';
-            setTheme(saved);
-            themeToggle.addEventListener('click', () => {
-                setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-            });
-        }
-
-        initTheme();
-
-
-
     </script>
 </body>
+
 </html>
