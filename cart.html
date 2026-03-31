@@ -135,20 +135,20 @@
         }
 
         .mobile-menu {
-            display: none;
+            display: none !important;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
             background: var(--secondary-color);
-            z-index: 999;
+            z-index: 1001;
             flex-direction: column;
             overflow-y: auto;
         }
 
         .mobile-menu.active {
-            display: flex;
+            display: flex !important;
         }
 
         .mobile-menu-header {
@@ -184,9 +184,15 @@
             font-size: 1.2rem;
         }
 
+        .mobile-nav-links a:active,
+        .mobile-nav-links a:focus {
+            color: var(--primary-color);
+            background: rgba(111, 0, 210, 0.12);
+        }
+
         @media (max-width: 768px) {
             .hamburger {
-                display: flex;
+                display: flex !important;
             }
 
             .nav-links {
@@ -736,6 +742,7 @@
                 <ul class="mobile-nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
+                    <li><a href="explore.html">Explore Brands</a></li>
                     <li><a href="cart.html">Cart</a></li>
                     <li><a href="favorite.html">Favorites</a></li>
                 </ul>
@@ -825,24 +832,26 @@
             const cartItemsHTML = cart.map((item, index) => `
                 <div class="cart-item">
                     <div class="cart-item-image">
-                        ${item.mediaType && item.mediaType.startsWith('video/')
-                    ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${item.media}"></video>`
-                    : `<img src="${item.media}" alt="${item.name}">`
+                        ${item.media && item.media.trim() 
+                    ? (item.mediaType && item.mediaType.startsWith('video/')
+                        ? `<video style="width: 100%; height: 100%; object-fit: cover;" controls><source src="${item.media}"></video>`
+                        : `<img src="${item.media}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`)
+                    : `<i class="fas fa-box" style="font-size: 3rem; opacity: 0.5;"></i>`
                 }
                     </div>
                     <div class="cart-item-details">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-meta">
-                            <span><i class="fas fa-tag"></i> ${item.category}</span>
-                            <span><i class="fas fa-building"></i> ${item.university}</span>
-                            <span><i class="fas fa-user"></i> ${item.brand}</span>
+                            <span><i class="fas fa-tag"></i> ${item.category || 'Uncategorized'}</span>
+                            <span><i class="fas fa-building"></i> ${item.university || 'N/A'}</span>
+                            <span><i class="fas fa-user"></i> ${item.brand || 'N/A'}</span>
                         </div>
-                        <div class="cart-item-price">₦${item.price.toLocaleString()}</div>
+                        <div class="cart-item-price">₦${(item.price || 0).toLocaleString()}</div>
                     </div>
                     <div class="cart-item-controls">
                         <div class="quantity-control">
                             <button onclick="updateQuantity(${index}, -1)">−</button>
-                            <input type="number" value="${item.quantity}" readonly>
+                            <input type="number" value="${item.quantity || 1}" readonly>
                             <button onclick="updateQuantity(${index}, 1)">+</button>
                         </div>
                         <button class="remove-btn" onclick="addToFavoriteFromCart(${index})" style="background-color: #ff9800;">
@@ -1047,23 +1056,36 @@
             const closeMenu = document.getElementById('closeMenu');
             const mobileMenu = document.getElementById('mobileMenu');
 
+            console.log('setupHamburgerMenu called - Elements found:', {
+                hamburger: !!hamburger,
+                closeMenu: !!closeMenu,
+                mobileMenu: !!mobileMenu
+            });
+
             if (hamburger && closeMenu && mobileMenu) {
-                hamburger.addEventListener('click', () => {
+                hamburger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('Hamburger clicked');
                     hamburger.classList.toggle('active');
                     mobileMenu.classList.toggle('active');
                 });
 
-                closeMenu.addEventListener('click', () => {
+                closeMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('Close menu clicked');
                     hamburger.classList.remove('active');
                     mobileMenu.classList.remove('active');
                 });
 
                 document.querySelectorAll('.mobile-nav-links a').forEach(link => {
                     link.addEventListener('click', () => {
+                        console.log('Mobile nav link clicked');
                         hamburger.classList.remove('active');
                         mobileMenu.classList.remove('active');
                     });
                 });
+            } else {
+                console.error('setupHamburgerMenu: Required elements not found!');
             }
         }
 

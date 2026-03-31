@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Load saved theme synchronously to prevent flash -->
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
@@ -224,6 +225,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -570,6 +572,7 @@
                 transform: translateY(-20px);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -804,7 +807,8 @@
                 font-size: 0.85rem;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 0.75rem;
             }
 
@@ -1155,6 +1159,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- HEADER -->
     <header class="header">
@@ -1162,7 +1167,8 @@
             <a href="shop.html" class="logo">Campus<span>Thread</span></a>
             <div class="header-actions">
                 <span style="font-weight: 600;">Super Admin</span>
-                <button id="themeToggle" class="btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode">🌙</button>
+                <button id="themeToggle" class="btn" onclick="toggleTheme()"
+                    aria-label="Toggle dark/light mode">🌙</button>
                 <button class="logout-btn" onclick="window.location.href='index.html'">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -1180,11 +1186,20 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <ul class="sidebar-menu">
-                <li><a href="javascript:void(0);" class="menu-item active" onclick="showSection(event, 'dashboard'); return false;"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="javascript:void(0);" class="menu-item" onclick="showSection(event, 'products'); return false;"><i class="fas fa-box"></i> Products</a></li>
-                <li><a href="javascript:void(0);" class="menu-item" onclick="showSection(event, 'brands'); return false;"><i class="fas fa-tag"></i> Brands</a></li>
-                <li><a href="javascript:void(0);" class="menu-item" onclick="showSection(event, 'categories'); return false;"><i class="fas fa-list"></i> Categories</a></li>
-                <li><a href="javascript:void(0);" class="menu-item" onclick="showSection(event, 'analytics'); return false;"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="javascript:void(0);" class="menu-item active"
+                        onclick="showSection(event, 'dashboard'); return false;"><i class="fas fa-chart-line"></i>
+                        Dashboard</a></li>
+                <li><a href="javascript:void(0);" class="menu-item"
+                        onclick="showSection(event, 'products'); return false;"><i class="fas fa-box"></i> Products</a>
+                </li>
+                <li><a href="javascript:void(0);" class="menu-item"
+                        onclick="showSection(event, 'brands'); return false;"><i class="fas fa-tag"></i> Brands</a></li>
+                <li><a href="javascript:void(0);" class="menu-item"
+                        onclick="showSection(event, 'categories'); return false;"><i class="fas fa-list"></i>
+                        Categories</a></li>
+                <li><a href="javascript:void(0);" class="menu-item"
+                        onclick="showSection(event, 'analytics'); return false;"><i class="fas fa-chart-bar"></i>
+                        Analytics</a></li>
             </ul>
         </aside>
 
@@ -1196,7 +1211,7 @@
             <!-- DASHBOARD SECTION -->
             <section id="dashboard" class="content-section active">
                 <h1 class="section-title"><i class="fas fa-chart-line"></i> Dashboard</h1>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Total Products</div>
@@ -1235,7 +1250,7 @@
             <!-- PRODUCTS SECTION -->
             <section id="products" class="content-section">
                 <h1 class="section-title"><i class="fas fa-box"></i> Products Management</h1>
-                
+
                 <div class="search-bar">
                     <input type="text" id="productSearch" placeholder="Search products by name, brand, or category...">
                     <button class="btn btn-primary" onclick="resetProductSearch()">
@@ -1264,7 +1279,7 @@
             <!-- BRANDS SECTION -->
             <section id="brands" class="content-section">
                 <h1 class="section-title"><i class="fas fa-tag"></i> Brands Management</h1>
-                
+
                 <div class="form-container">
                     <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Add New Brand</h3>
                     <form id="brandForm" onsubmit="addBrand(event)">
@@ -1299,14 +1314,15 @@
             <!-- CATEGORIES SECTION -->
             <section id="categories" class="content-section">
                 <h1 class="section-title"><i class="fas fa-list"></i> Categories Management</h1>
-                
+
                 <div class="form-container">
                     <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Add New Category</h3>
                     <form id="categoryForm" onsubmit="addCategory(event)">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Category Name *</label>
-                                <input type="text" id="categoryName" required placeholder="Enter category name (e.g., Shirt, Tie, Socks, Caps)">
+                                <input type="text" id="categoryName" required
+                                    placeholder="Enter category name (e.g., Shirt, Tie, Socks, Caps)">
                             </div>
                             <div class="form-group">
                                 <label>Icon (Font Awesome) *</label>
@@ -1338,7 +1354,7 @@
             <!-- ANALYTICS SECTION -->
             <section id="analytics" class="content-section">
                 <h1 class="section-title"><i class="fas fa-chart-bar"></i> Analytics</h1>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Average Product Price</div>
@@ -1396,11 +1412,13 @@
                 </div>
                 <div class="form-group">
                     <label>Brand</label>
-                    <input type="text" id="editProductBrand" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                    <input type="text" id="editProductBrand" readonly
+                        style="background-color: #f0f0f0; cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label>University</label>
-                    <input type="text" id="editProductUniversity" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                    <input type="text" id="editProductUniversity" readonly
+                        style="background-color: #f0f0f0; cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
@@ -1478,8 +1496,10 @@
                 <button class="modal-close" onclick="closeModal('deleteConfirmModal')">&times;</button>
             </div>
             <div style="padding: 1.5rem; text-align: center;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff6b6b; margin-bottom: 1rem;"></i>
-                <p id="deleteConfirmMessage" style="font-size: 1rem; margin-bottom: 1.5rem; color: var(--text-dark);">Are you sure you want to delete this item? This action cannot be undone.</p>
+                <i class="fas fa-exclamation-triangle"
+                    style="font-size: 3rem; color: #ff6b6b; margin-bottom: 1rem;"></i>
+                <p id="deleteConfirmMessage" style="font-size: 1rem; margin-bottom: 1.5rem; color: var(--text-dark);">
+                    Are you sure you want to delete this item? This action cannot be undone.</p>
                 <div style="display: flex; gap: 1rem; justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="confirmDelete()" style="flex: 1;">
                         <i class="fas fa-trash"></i> Delete
@@ -1520,11 +1540,11 @@
         };
 
         // Initialize data on page load
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             // Initialize theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            
+
             loadData();
             initializeCategoryOptions();
             showSection(null, 'dashboard');
@@ -1587,9 +1607,9 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             console.log('Showing section:', sectionName);
-            
+
             // Hide all sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
@@ -1605,7 +1625,7 @@
                 return;
             }
             sectionElement.classList.add('active');
-            
+
             // Add active class to the clicked menu item
             const clickedItem = event ? event.currentTarget : document.querySelector(`.menu-item.active`);
             if (clickedItem) {
@@ -1624,7 +1644,7 @@
             } else if (sectionName === 'analytics') {
                 loadAnalytics();
             }
-            
+
             console.log('Section loaded successfully:', sectionName);
         }
 
@@ -1648,7 +1668,7 @@
             uniqueBrands.forEach(brand => {
                 const brandProducts = allProducts.filter(p => p.brand === brand);
                 const vendorCount = new Set(brandProducts.map(p => p.brand)).size;
-                
+
                 brandStats.push({
                     brand: brand,
                     productCount: brandProducts.length,
@@ -1657,7 +1677,7 @@
             });
 
             const tbody = document.getElementById('brandStatsBody');
-            tbody.innerHTML = brandStats.length === 0 
+            tbody.innerHTML = brandStats.length === 0
                 ? '<tr><td colspan="4" style="text-align: center; padding: 2rem;">No data available</td></tr>'
                 : brandStats.map(stat => `
                     <tr>
@@ -1687,7 +1707,7 @@
 
         function renderProductsTable(products) {
             const tbody = document.getElementById('productsTableBody');
-            
+
             if (products.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;"><div class="empty-state"><i class="fas fa-inbox"></i><p>No products found</p></div></td></tr>';
                 return;
@@ -1695,8 +1715,8 @@
 
             tbody.innerHTML = products.map(product => {
                 console.log('Rendering product:', product, 'ID:', product.id, 'ID type:', typeof product.id);
-                
-                const mediaThumb = product.mediaType && product.mediaType.startsWith('video/') 
+
+                const mediaThumb = product.mediaType && product.mediaType.startsWith('video/')
                     ? `<div class="product-video-thumb"><i class="fas fa-video" style="font-size: 1.5rem;"></i></div>`
                     : `<img src="${product.media}" alt="${product.name}" class="product-image-thumb">`;
 
@@ -1722,9 +1742,9 @@
             }).join('');
         }
 
-        document.getElementById('productSearch').addEventListener('keyup', function() {
+        document.getElementById('productSearch').addEventListener('keyup', function () {
             const searchTerm = this.value.toLowerCase();
-            const filtered = allProducts.filter(product => 
+            const filtered = allProducts.filter(product =>
                 product.name.toLowerCase().includes(searchTerm) ||
                 product.brand.toLowerCase().includes(searchTerm) ||
                 product.category.toLowerCase().includes(searchTerm)
@@ -1782,7 +1802,7 @@
             deleteContext.type = 'product';
             deleteContext.id = productId;
             deleteContext.name = product.name;
-            
+
             document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete "${product.name}"? This action cannot be undone.`;
             openModal('deleteConfirmModal');
         }
@@ -1790,11 +1810,11 @@
         // ===== BRANDS MANAGEMENT =====
         function loadBrandsTable() {
             const tbody = document.getElementById('brandsTableBody');
-            
+
             tbody.innerHTML = allBrands.map((brand, index) => {
                 const brandProducts = allProducts.filter(p => p.brand === brand);
                 const vendorCount = new Set(brandProducts.map(p => p.brand)).size;
-                
+
                 return `
                     <tr>
                         <td><strong>${brand}</strong></td>
@@ -1887,7 +1907,7 @@
             deleteContext.type = 'brand';
             deleteContext.index = index;
             deleteContext.name = brand;
-            
+
             document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete the brand "${brand}"?`;
             openModal('deleteConfirmModal');
         }
@@ -1895,10 +1915,10 @@
         // ===== CATEGORIES MANAGEMENT =====
         function loadCategoriesTable() {
             const tbody = document.getElementById('categoriesTableBody');
-            
+
             tbody.innerHTML = allCategories.map((category, index) => {
                 const categoryProducts = allProducts.filter(p => p.category === category.name);
-                
+
                 return `
                     <tr>
                         <td><strong>${category.name}</strong></td>
@@ -1998,7 +2018,7 @@
             deleteContext.type = 'category';
             deleteContext.index = index;
             deleteContext.name = category.name;
-            
+
             document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete the category "${category.name}"?`;
             openModal('deleteConfirmModal');
         }
@@ -2105,7 +2125,7 @@
 
         // Close modal when clicking outside
         document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
+            modal.addEventListener('click', function (e) {
                 if (e.target === this) {
                     this.classList.remove('active');
                 }
@@ -2133,7 +2153,7 @@
         }
 
         // Refresh dashboard when storage changes
-        window.addEventListener('storage', function() {
+        window.addEventListener('storage', function () {
             loadData();
             if (document.getElementById('dashboard').classList.contains('active')) {
                 updateDashboard();
@@ -2171,12 +2191,12 @@
             console.log('Mobile menu initialized - found', menuItems.length, 'menu items');
 
             // Toggle menu on hamburger click
-            hamburgerMenu.addEventListener('click', function(e) {
+            hamburgerMenu.addEventListener('click', function (e) {
                 e.stopPropagation();
                 console.log('Hamburger clicked, current state:', sidebar.classList.contains('mobile-open'));
                 hamburgerMenu.classList.toggle('active');
                 sidebar.classList.toggle('mobile-open');
-                
+
                 // Prevent body scroll when menu is open
                 if (sidebar.classList.contains('mobile-open')) {
                     document.body.style.overflow = 'hidden';
@@ -2189,7 +2209,7 @@
 
             // Close menu when a menu item is clicked
             menuItems.forEach(item => {
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     console.log('Menu item clicked:', this.textContent);
                     // Close menu after selection
                     hamburgerMenu.classList.remove('active');
@@ -2199,10 +2219,10 @@
             });
 
             // Close menu when clicking outside of it
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 const isClickOnMenu = sidebar.contains(event.target);
                 const isClickOnHamburger = hamburgerMenu.contains(event.target);
-                
+
                 if (!isClickOnMenu && !isClickOnHamburger && sidebar.classList.contains('mobile-open')) {
                     hamburgerMenu.classList.remove('active');
                     sidebar.classList.remove('mobile-open');
@@ -2211,7 +2231,7 @@
             });
 
             // Close menu on window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768 && sidebar.classList.contains('mobile-open')) {
                     hamburgerMenu.classList.remove('active');
                     sidebar.classList.remove('mobile-open');
@@ -2224,4 +2244,5 @@
         initThemeToggle();
     </script>
 </body>
+
 </html>

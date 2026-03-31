@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Load saved theme synchronously to prevent flash -->
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
@@ -160,6 +160,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -261,16 +262,16 @@
             cursor: pointer;
         }
 
-        .role-card input[type="radio"]:checked + .role-icon {
+        .role-card input[type="radio"]:checked+.role-icon {
             color: var(--primary-color);
         }
 
-        .role-card input[type="radio"]:checked ~ .role-label {
+        .role-card input[type="radio"]:checked~.role-label {
             color: var(--primary-color);
             font-weight: 700;
         }
 
-        .role-card input[type="radio"]:checked ~ .role-description {
+        .role-card input[type="radio"]:checked~.role-description {
             color: var(--primary-color);
         }
 
@@ -465,6 +466,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -598,7 +600,7 @@
             <!-- ROLE SELECTION -->
             <div id="roleSelection">
                 <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">What's your role?</h3>
-                
+
                 <div class="role-selector">
                     <label class="role-card">
                         <input type="radio" name="userRole" value="buyer" checked>
@@ -627,7 +629,8 @@
             <!-- SIGN UP FORM (HIDDEN BY DEFAULT) -->
             <form id="signupForm" onsubmit="handleSignUp(event)" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-                    <button type="button" class="btn btn-secondary" style="flex: 0 0 auto; width: auto; padding: 0.5rem 0.75rem;" onclick="backToRoleSelection()">
+                    <button type="button" class="btn btn-secondary"
+                        style="flex: 0 0 auto; width: auto; padding: 0.5rem 0.75rem;" onclick="backToRoleSelection()">
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <span style="font-weight: 600; color: var(--primary-color);" id="selectedRoleDisplay">Buyer</span>
@@ -662,7 +665,8 @@
 
                     <div class="form-group">
                         <label for="signupSocialLink">Social Media / DM Link</label>
-                        <input type="text" id="signupSocialLink" placeholder="https://instagram.com/yourbrand or https://wa.me/2341234567890">
+                        <input type="text" id="signupSocialLink"
+                            placeholder="https://instagram.com/yourbrand or https://wa.me/2341234567890">
                     </div>
                 </div>
 
@@ -677,14 +681,16 @@
                 <div class="form-group password-group">
                     <label for="signupConfirmPassword">Confirm Password</label>
                     <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signupConfirmPassword')">
+                    <button type="button" class="password-toggle"
+                        onclick="togglePasswordVisibility('signupConfirmPassword')">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
 
                 <div class="checkbox-group">
                     <input type="checkbox" id="agreeTOS" required>
-                    <label for="agreeTOS">I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a></label>
+                    <label for="agreeTOS">I agree to the <a href="#" style="color: var(--primary-color);">Terms of
+                            Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a></label>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
@@ -700,7 +706,9 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2024 CampusThread. All rights reserved. | <a href="#" style="color: var(--primary-color); text-decoration: none;">Privacy Policy</a> | <a href="#" style="color: var(--primary-color); text-decoration: none;">Terms of Service</a></p>
+        <p>&copy; 2024 CampusThread. All rights reserved. | <a href="#"
+                style="color: var(--primary-color); text-decoration: none;">Privacy Policy</a> | <a href="#"
+                style="color: var(--primary-color); text-decoration: none;">Terms of Service</a></p>
     </footer>
 
     <script>
@@ -714,7 +722,7 @@
         }
 
         // Load saved theme on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         });
@@ -746,8 +754,8 @@
             const input = document.getElementById(inputId);
             const isPassword = input.type === 'password';
             input.type = isPassword ? 'text' : 'password';
-            event.target.closest('.password-toggle').innerHTML = isPassword 
-                ? '<i class="fas fa-eye-slash"></i>' 
+            event.target.closest('.password-toggle').innerHTML = isPassword
+                ? '<i class="fas fa-eye-slash"></i>'
                 : '<i class="fas fa-eye"></i>';
         }
 
@@ -782,7 +790,7 @@
         // ===== SIGN IN =====
         function handleSignIn(event) {
             event.preventDefault();
-            
+
             const email = document.getElementById('signinEmail').value.trim();
             const password = document.getElementById('signinPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
@@ -946,7 +954,7 @@
         }
 
         // ===== PREFILL EMAIL IF REMEMBERED =====
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             const rememberedEmail = localStorage.getItem('rememberEmail');
             if (rememberedEmail) {
                 document.getElementById('signinEmail').value = rememberedEmail;
