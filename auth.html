@@ -71,7 +71,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 1rem;
-            gap: 1rem;
+            gap: 1.5rem;
+            min-height: 70px;
         }
 
         .logo {
@@ -80,6 +81,8 @@
             font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .logo span {
@@ -89,7 +92,8 @@
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            flex-shrink: 0;
         }
 
         .theme-toggle {
@@ -98,13 +102,102 @@
             color: var(--text-dark);
             cursor: pointer;
             font-size: 1.2rem;
-            padding: 0.5rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 8px;
             transition: var(--transition);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .theme-toggle:hover {
             background: rgba(111, 0, 210, 0.1);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            min-width: 44px;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: var(--transition);
+            display: block;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: var(--secondary-color);
+            z-index: 999;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        .mobile-nav-links li {
+            margin: 0;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 1rem 1.5rem;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active {
+            background: rgba(111, 0, 210, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            padding-left: 1.75rem;
         }
 
         /* ===== MAIN CONTAINER ===== */
@@ -502,7 +595,49 @@
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
+        @media (max-width: 1024px) {
+            .navbar {
+                min-height: 65px;
+                gap: 1rem;
+            }
+
+            .theme-toggle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .navbar {
+                min-height: 60px;
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .theme-toggle {
+                font-size: 1rem;
+                padding: 0.4rem;
+                min-width: 40px;
+                min-height: 40px;
+            }
+
+            .mobile-menu {
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+
+            .mobile-nav-links a {
+                font-size: 1rem;
+                padding: 0.875rem 1.25rem;
+            }
+
             .container {
                 margin: 1rem;
                 padding: 1.5rem;
@@ -511,13 +646,49 @@
             .role-selector {
                 grid-template-columns: 1fr;
             }
+        }
+
+        @media (max-width: 480px) {
+            .hamburger {
+                min-width: 36px;
+                min-height: 36px;
+                padding: 0.25rem;
+            }
+
+            .hamburger span {
+                width: 20px;
+                height: 2px;
+            }
 
             .navbar {
-                padding: 0.75rem;
+                min-height: 56px;
+                padding: 0.5rem;
+                gap: 0.5rem;
             }
 
             .logo {
-                font-size: 1.2rem;
+                font-size: 1rem;
+            }
+
+            .theme-toggle {
+                font-size: 0.9rem;
+                min-width: 36px;
+                min-height: 36px;
+            }
+
+            .mobile-menu {
+                top: 56px;
+                height: calc(100vh - 56px);
+            }
+
+            .mobile-nav-links a {
+                font-size: 0.95rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .container {
+                margin: 0.5rem;
+                padding: 1.25rem;
             }
         }
     </style>
@@ -529,9 +700,24 @@
         <nav class="navbar">
             <a href="index.html" class="logo">Campus<span>Thread</span></a>
             <div class="nav-right">
-                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                     <i class="fas fa-moon"></i>
                 </button>
+                <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <ul class="mobile-nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="explore.html">Explore</a></li>
+                    <li><a href="auth.html" class="active">Sign In / Sign Up</a></li>
+                </ul>
             </div>
         </nav>
     </header>
@@ -712,6 +898,36 @@
     </footer>
 
     <script>
+        // ===== HAMBURGER MENU =====
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', hamburger.classList.contains('active'));
+        }
+
+        function closeMobileMenu() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking on links
+        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu when clicking outside
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                closeMobileMenu();
+            }
+        });
+
         // ===== THEME TOGGLE =====
         function toggleTheme() {
             const html = document.documentElement;
