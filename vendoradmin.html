@@ -414,6 +414,28 @@
             color: var(--text-dark);
         }
 
+        .profile-section {
+            background: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-summary {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            background: rgba(111, 0, 210, 0.08);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+        }
+
+        .profile-summary p {
+            margin: 0.35rem 0;
+            color: var(--text-dark);
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1103,12 +1125,42 @@
         <!-- Alert Messages -->
         <div id="alertContainer"></div>
 
+        <!-- Vendor Profile Section -->
+        <section class="profile-section">
+            <h2 class="section-title"><i class="fas fa-user-circle"></i> Vendor Profile</h2>
+            <div class="profile-summary" id="profileSummary">
+                <p><strong>Name:</strong> <span id="profileNameDisplay">Not set</span></p>
+                <p><strong>Brand Name:</strong> <span id="profileBrandDisplay">Not set</span></p>
+                <p><strong>Account Number:</strong> <span id="profileAccountDisplay">Not set</span></p>
+            </div>
+            <form id="vendorProfileForm" onsubmit="handleProfileSubmit(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="vendorName">Your Name *</label>
+                        <input type="text" id="vendorName" required placeholder="e.g., John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="vendorBrandName">Brand Name *</label>
+                        <input type="text" id="vendorBrandName" required placeholder="e.g., CampusGear">
+                    </div>
+                    <div class="form-group">
+                        <label for="vendorAccountNumber">Vendor Account Number *</label>
+                        <input type="text" id="vendorAccountNumber" required placeholder="e.g., 1234567890">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Profile</button>
+                        <button type="reset" class="btn btn-secondary" onclick="clearVendorProfileForm()"><i class="fas fa-redo"></i> Clear</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
         <!-- Tabs Navigation -->
         <div class="tabs-nav">
-            <button class="tab-btn active" onclick="switchTab('upload')">
+            <button class="tab-btn active" onclick="switchTab('upload', event)">
                 <i class="fas fa-cloud-upload-alt"></i> Upload Product
             </button>
-            <button class="tab-btn" onclick="switchTab('products')">
+            <button class="tab-btn" onclick="switchTab('products', event)">
                 <i class="fas fa-list"></i> My Products
             </button>
         </div>
@@ -1304,13 +1356,6 @@
                             </select>
                         </div>
 
-                        <!-- Vendor Social Link -->
-                        <div class="form-group">
-                            <label for="vendorSocialLink">Vendor Social Media / DM Link *</label>
-                            <input type="url" id="vendorSocialLink" required placeholder="https://wa.me/1234567890 or https://t.me/vendorname">
-                            <small style="color: var(--text-light);">Use a direct DM/contact URL for WhatsApp, Telegram, Instagram, etc.</small>
-                        </div>
-
                         <!-- Category Selection -->
                         <div class="form-group">
                             <label for="productCategory">Category *</label>
@@ -1387,11 +1432,11 @@
     </div>
 
     <!-- Edit Product Modal -->
-    <!-- <div id="editModal" class="modal">
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 Edit Product
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <button class="modal-close" onclick="closeEditModal()">✕</button>
             </div>
             <form id="editForm" onsubmit="handleEditSubmit(event)">
                 <div class="form-group">
@@ -1524,11 +1569,11 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
                 </div>
             </form>
         </div>
-    </div> -->
+    </div>
 
     <script>
         // Maximum file size: 10MB
@@ -1550,7 +1595,57 @@
             displayAvailableBrandsAndCategories();
             loadProducts();
             setupMediaUpload();
+            loadVendorProfile();
         });
+
+        // Load vendor profile from localStorage
+        function loadVendorProfile() {
+            const profile = JSON.parse(localStorage.getItem('campusThreadVendorProfile') || '{}');
+            const nameField = document.getElementById('vendorName');
+            const brandField = document.getElementById('vendorBrandName');
+            const accountField = document.getElementById('vendorAccountNumber');
+
+            // Update display elements
+            document.getElementById('profileNameDisplay').textContent = profile.name || 'Not set';
+            document.getElementById('profileBrandDisplay').textContent = profile.brandName || 'Not set';
+            document.getElementById('profileAccountDisplay').textContent = profile.accountNumber || 'Not set';
+
+            // Update form fields
+            if (nameField) nameField.value = profile.name || '';
+            if (brandField) brandField.value = profile.brandName || '';
+            if (accountField) accountField.value = profile.accountNumber || '';
+        }
+
+        function handleProfileSubmit(event) {
+            event.preventDefault();
+
+            const nameValue = document.getElementById('vendorName').value.trim();
+            const brandValue = document.getElementById('vendorBrandName').value.trim();
+            const accountValue = document.getElementById('vendorAccountNumber').value.trim();
+
+            if (!nameValue || !brandValue || !accountValue) {
+                showAlert('Please fill in all profile fields', 'error');
+                return;
+            }
+
+            const profile = {
+                name: nameValue,
+                brandName: brandValue,
+                accountNumber: accountValue,
+                updatedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('campusThreadVendorProfile', JSON.stringify(profile));
+            loadVendorProfile();
+            showAlert('Vendor profile saved successfully!', 'success');
+        }
+
+        function clearVendorProfileForm() {
+            const vendorProfileForm = document.getElementById('vendorProfileForm');
+            if (vendorProfileForm) {
+                vendorProfileForm.reset();
+            }
+        }
 
         // Display available brands and categories from localStorage
         function displayAvailableBrandsAndCategories() {
@@ -1707,7 +1802,12 @@
         }
 
         // Switch tabs
-        function switchTab(tabName) {
+        function switchTab(tabName, evt) {
+            if (evt && typeof evt.preventDefault === 'function') {
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1718,7 +1818,14 @@
 
             // Show selected tab
             document.getElementById(tabName).classList.add('active');
-            event.target.closest('.tab-btn').classList.add('active');
+            const clickedButton = evt?.target?.closest('.tab-btn');
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+
+            if (tabName === 'upload') {
+                displayAvailableBrandsAndCategories();
+            }
 
             if (tabName === 'products') {
                 loadProducts();
@@ -1737,15 +1844,9 @@
 
             const brand = document.getElementById('productBrand').value;
             const category = document.getElementById('productCategory').value;
-            const vendorSocialLink = document.getElementById('vendorSocialLink').value.trim();
 
             if (!brand || !category) {
                 showAlert('Please select a brand and category', 'error');
-                return;
-            }
-
-            if (!vendorSocialLink) {
-                showAlert('Please provide your vendor social media/DM link', 'error');
                 return;
             }
 
@@ -1758,7 +1859,6 @@
                     university: document.getElementById('university').value,
                     brand: brand,
                     category: category,
-                    vendorSocialLink: vendorSocialLink,
                     description: document.getElementById('description').value,
                     media: e.target.result,
                     mediaType: selectedMediaFile.type,
@@ -1817,6 +1917,14 @@
                             <span><i class="fas fa-user"></i> ${product.brand}</span>
                         </div>
                         <div class="product-price">₦${product.price.toLocaleString()}</div>
+                        <div class="product-actions">
+                            <button class="edit-btn" onclick="openEditModal('${product.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="deleteProduct('${product.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -1876,9 +1984,101 @@
                             <span><i class="fas fa-user"></i> ${product.brand}</span>
                         </div>
                         <div class="product-price">₦${product.price.toLocaleString()}</div>
+                        <div class="product-actions">
+                            <button class="edit-btn" onclick="openEditModal('${product.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="delete-btn" onclick="deleteProduct('${product.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        // Open edit modal
+        let currentEditingProductId = null;
+        function openEditModal(productId) {
+            currentEditingProductId = productId;
+            const products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            const product = products.find(p => p.id == productId);
+
+            if (!product) {
+                showAlert('Product not found', 'error');
+                return;
+            }
+
+            // Populate form fields
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editUniversity').value = product.university;
+            document.getElementById('editBrand').value = product.brand;
+            document.getElementById('editCategory').value = product.category;
+            document.getElementById('editDescription').value = product.description;
+
+            // Show modal
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.getElementById('editForm').reset();
+            currentEditingProductId = null;
+        }
+
+        // Handle edit form submission
+        function handleEditSubmit(event) {
+            event.preventDefault();
+
+            if (!currentEditingProductId) {
+                showAlert('Error: Product ID not found', 'error');
+                return;
+            }
+
+            const products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            const productIndex = products.findIndex(p => p.id == currentEditingProductId);
+
+            if (productIndex === -1) {
+                showAlert('Product not found', 'error');
+                return;
+            }
+
+            // Update product data
+            products[productIndex].name = document.getElementById('editProductName').value;
+            products[productIndex].price = parseFloat(document.getElementById('editProductPrice').value);
+            products[productIndex].university = document.getElementById('editUniversity').value;
+            products[productIndex].brand = document.getElementById('editBrand').value;
+            products[productIndex].category = document.getElementById('editCategory').value;
+            products[productIndex].description = document.getElementById('editDescription').value;
+            products[productIndex].updatedAt = new Date().toISOString();
+
+            // Save updated products
+            localStorage.setItem('campusThreadProducts', JSON.stringify(products));
+
+            showAlert('Product updated successfully!', 'success');
+            closeEditModal();
+            loadProducts();
+        }
+
+        // Delete product
+        function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                return;
+            }
+
+            const products = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
+            const filteredProducts = products.filter(p => p.id != productId);
+
+            if (filteredProducts.length === products.length) {
+                showAlert('Product not found', 'error');
+                return;
+            }
+
+            localStorage.setItem('campusThreadProducts', JSON.stringify(filteredProducts));
+            showAlert('Product deleted successfully!', 'success');
+            loadProducts();
         }
 
         // Show alert messages
@@ -1941,6 +2141,16 @@
                 closeMobileMenu();
             }
         });
+
+        // Close edit modal when clicking outside the modal content
+        const editModal = document.getElementById('editModal');
+        if (editModal) {
+            editModal.addEventListener('click', (e) => {
+                if (e.target === editModal) {
+                    closeEditModal();
+                }
+            });
+        }
     </script>
 </body>
 </html>

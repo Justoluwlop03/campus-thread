@@ -171,6 +171,7 @@
             position: sticky;
             top: 100px;
             transition: var(--transition);
+            z-index: 10;
         }
 
         .sidebar.mobile-open {
@@ -1285,6 +1286,19 @@
                 padding: 2rem;
             }
         }
+
+        /* Ensure sidebar is visible on large screens */
+        @media (min-width: 769px) {
+            .sidebar {
+                position: sticky !important;
+                top: 100px !important;
+                width: 250px !important;
+                transform: none !important;
+                opacity: 1 !important;
+                display: block !important;
+                z-index: 10 !important;
+            }
+        }
     </style>
 </head>
 
@@ -1325,6 +1339,9 @@
                 <li><a href="javascript:void(0);" class="menu-item"
                         onclick="showSection(event, 'categories'); return false;"><i class="fas fa-list"></i>
                         Categories</a></li>
+                <li><a href="javascript:void(0);" class="menu-item"
+                        onclick="showSection(event, 'ads'); return false;"><i class="fas fa-bullhorn"></i> Ads</a>
+                </li>
                 <li><a href="javascript:void(0);" class="menu-item"
                         onclick="showSection(event, 'analytics'); return false;"><i class="fas fa-chart-bar"></i>
                         Analytics</a></li>
@@ -1474,6 +1491,62 @@
                             </tr>
                         </thead>
                         <tbody id="categoriesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ADS SECTION -->
+            <section id="ads" class="content-section">
+                <h1 class="section-title"><i class="fas fa-bullhorn"></i> Ads Management</h1>
+
+                <div class="form-container">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">Create Homepage Ad</h3>
+                    <form id="adForm" onsubmit="addAd(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ad Title *</label>
+                                <input type="text" id="adTitle" required placeholder="Enter ad title">
+                            </div>
+                            <div class="form-group">
+                                <label>CTA Label *</label>
+                                <input type="text" id="adCtaText" required placeholder="Shop Now">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Target Link</label>
+                                <input type="text" id="adLink" placeholder="https://example.com or shop.html">
+                            </div>
+                            <div class="form-group">
+                                <label>Image Upload *</label>
+                                <input type="file" id="adImageFile" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Ad Description *</label>
+                            <textarea id="adDescription" required
+                                placeholder="Write the message that should appear on the homepage"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Publish Ad
+                        </button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>CTA</th>
+                                <th>Link</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adsTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -1655,6 +1728,7 @@
         let allProducts = [];
         let allBrands = [];
         let allCategories = [];
+        let allAds = [];
         let editingProductId = null;
         let editingBrandId = null;
         let editingCategoryId = null;
@@ -1685,6 +1759,7 @@
             allProducts = JSON.parse(localStorage.getItem('campusThreadProducts') || '[]');
             allBrands = JSON.parse(localStorage.getItem('campusThreadBrands') || JSON.stringify(DEFAULT_BRANDS));
             allCategories = JSON.parse(localStorage.getItem('campusThreadCategories') || JSON.stringify(DEFAULT_CATEGORIES));
+            allAds = JSON.parse(localStorage.getItem('campusThreadAds') || '[]');
 
             // Ensure default categories exist
             if (allCategories.length === 0) {
@@ -1713,6 +1788,10 @@
 
         function saveCategories() {
             localStorage.setItem('campusThreadCategories', JSON.stringify(allCategories));
+        }
+
+        function saveAds() {
+            localStorage.setItem('campusThreadAds', JSON.stringify(allAds));
         }
 
         // Initialize category options in forms
@@ -1755,9 +1834,14 @@
             sectionElement.classList.add('active');
 
             // Add active class to the clicked menu item
-            const clickedItem = event ? event.currentTarget : document.querySelector(`.menu-item.active`);
-            if (clickedItem) {
-                clickedItem.classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Fallback: find the menu item that corresponds to the section
+                const menuItem = document.querySelector(`.menu-item[onclick*="${sectionName}"]`);
+                if (menuItem) {
+                    menuItem.classList.add('active');
+                }
             }
 
             // Load section-specific data
@@ -1769,6 +1853,8 @@
                 loadBrandsTable();
             } else if (sectionName === 'categories') {
                 loadCategoriesTable();
+            } else if (sectionName === 'ads') {
+                loadAdsTable();
             } else if (sectionName === 'analytics') {
                 loadAnalytics();
             }
@@ -2151,6 +2237,98 @@
             openModal('deleteConfirmModal');
         }
 
+        // ===== ADS MANAGEMENT =====
+        function fileToDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Unable to read image file.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function addAd(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('adTitle').value.trim();
+            const description = document.getElementById('adDescription').value.trim();
+            const ctaText = document.getElementById('adCtaText').value.trim();
+            const link = document.getElementById('adLink').value.trim() || 'shop.html';
+            const imageInput = document.getElementById('adImageFile');
+            const imageFile = imageInput.files[0];
+
+            if (!title || !description || !ctaText || !imageFile) {
+                showAlert('Please complete all required ad fields.', 'warning');
+                return;
+            }
+
+            try {
+                const imageUrl = await fileToDataUrl(imageFile);
+
+                allAds.unshift({
+                    id: Date.now(),
+                    title,
+                    description,
+                    ctaText,
+                    link,
+                    imageUrl,
+                    createdAt: new Date().toISOString()
+                });
+
+                saveAds();
+                document.getElementById('adForm').reset();
+                loadAdsTable();
+                showAlert('Homepage ad published successfully!', 'success');
+            } catch (error) {
+                console.error(error);
+                showAlert('The ad image could not be uploaded. Please try another file.', 'danger');
+            }
+        }
+
+        function loadAdsTable() {
+            const tbody = document.getElementById('adsTableBody');
+
+            if (!tbody) {
+                return;
+            }
+
+            if (allAds.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;"><div class="empty-state"><i class="fas fa-bullhorn"></i><p>No homepage ads published yet</p></div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allAds.map(ad => `
+                <tr>
+                    <td><img src="${ad.imageUrl}" alt="${ad.title}" class="product-image-thumb"></td>
+                    <td><strong>${ad.title}</strong></td>
+                    <td>${ad.description}</td>
+                    <td>${ad.ctaText}</td>
+                    <td>${ad.link}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-danger" onclick="deleteAd(${ad.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteAd(adId) {
+            const ad = allAds.find(item => item.id === adId);
+
+            if (!ad) {
+                showAlert('Ad not found.', 'danger');
+                return;
+            }
+
+            allAds = allAds.filter(item => item.id !== adId);
+            saveAds();
+            loadAdsTable();
+            showAlert(`"${ad.title}" was removed from the homepage.`, 'success');
+        }
+
         // ===== ANALYTICS =====
         function loadAnalytics() {
             if (allProducts.length === 0) {
@@ -2291,6 +2469,8 @@
                 loadBrandsTable();
             } else if (document.getElementById('categories').classList.contains('active')) {
                 loadCategoriesTable();
+            } else if (document.getElementById('ads').classList.contains('active')) {
+                loadAdsTable();
             } else if (document.getElementById('analytics').classList.contains('active')) {
                 loadAnalytics();
             }

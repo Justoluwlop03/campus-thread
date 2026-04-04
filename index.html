@@ -430,6 +430,63 @@
             animation: slideInRight 0.8s ease-out;
         }
 
+        .ads-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+        }
+
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ad-card {
+            background: var(--secondary-color);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ad-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .ad-card-content {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            flex: 1;
+        }
+
+        .ad-card-content h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+        }
+
+        .ad-card-content p {
+            color: var(--text-light);
+        }
+
+        .ad-card-content .btn {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        .ads-empty {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+
         /* ===== FEATURES SECTION ===== */
         .features {
             max-width: 1400px;
@@ -763,6 +820,12 @@
         </div>
     </section>
 
+    <section class="ads-section" id="ads">
+        <h2 class="section-title">Latest <span class="accent">Campus Ads</span></h2>
+        <div id="adsContainer" class="ads-grid"></div>
+        <p id="adsEmptyState" class="ads-empty" hidden>No ads have been published yet.</p>
+    </section>
+
     <!-- FEATURES SECTION -->
     <section class="features" id="features">
         <h2 class="section-title">Why Choose <span class="accent">CampusThread</span>?</h2>
@@ -923,10 +986,45 @@
             localStorage.setItem('theme', newTheme);
         }
 
+        function loadAds() {
+            const ads = JSON.parse(localStorage.getItem('campusThreadAds') || '[]');
+            const adsContainer = document.getElementById('adsContainer');
+            const emptyState = document.getElementById('adsEmptyState');
+
+            if (!adsContainer || !emptyState) {
+                return;
+            }
+
+            if (!ads.length) {
+                adsContainer.innerHTML = '';
+                emptyState.hidden = false;
+                return;
+            }
+
+            emptyState.hidden = true;
+            adsContainer.innerHTML = ads.map(ad => `
+                <article class="ad-card">
+                    <img src="${ad.imageUrl}" alt="${ad.title}">
+                    <div class="ad-card-content">
+                        <h3>${ad.title}</h3>
+                        <p>${ad.description}</p>
+                        <a href="${ad.link || 'shop.html'}" class="btn btn-primary">${ad.ctaText || 'Learn More'}</a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
         // Load saved theme on page load
         document.addEventListener('DOMContentLoaded', function () {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
+            loadAds();
+        });
+
+        window.addEventListener('storage', function (event) {
+            if (event.key === 'campusThreadAds') {
+                loadAds();
+            }
         });
     </script>
 </body>
